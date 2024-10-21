@@ -1,20 +1,24 @@
+package com.urise.webapp.storage;
+
+import com.urise.webapp.model.Resume;
+
 import java.util.Arrays;
 
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
+    private final Resume[] storage = new Resume[10000];
     private int size = 0;
 
-    void clear() {
+    public void clear() {
         if (size != 0) {
             Arrays.fill(storage, 0, size, null);
             size = 0;
         }
     }
 
-    void save(Resume r) {
+    public void save(Resume r) {
         if (size == storage.length) {
             System.out.println("Ошибка! Хранилище переполнено.");
         }
@@ -26,7 +30,7 @@ public class ArrayStorage {
         size++;
     }
 
-    void update(String uuid, Resume r) {
+    public void update(String uuid, Resume r) {
         int indexForUpdate = isPresent(uuid);
         if (indexForUpdate == -1) {
             System.out.println("Ошибка! Резюме с таким uuid нет.");
@@ -35,7 +39,7 @@ public class ArrayStorage {
         storage[indexForUpdate] = r;
     }
 
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         if (isPresent(uuid) == -1) {
             System.out.println("Ошибка! Резюме с таким uuid нет.");
         } else {
@@ -48,7 +52,7 @@ public class ArrayStorage {
         return null;
     }
 
-    void delete(String uuid) {
+    public void delete(String uuid) {
         if (isPresent(uuid) == -1) {
             System.out.println("Ошибка! Резюме с таким uuid нет.");
         } else {
@@ -66,11 +70,11 @@ public class ArrayStorage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
-    int size() {
+    public int size() {
         return size;
     }
 
