@@ -18,8 +18,8 @@ public class ArrayStorage {
         boolean saved = false;
         for (int i = 0; i < countResume; i++) {
             if (r.uuid.equals(storage[i].uuid)) {
-                storage[i] = r;
                 saved = true;
+                break;
             }
         }
         if (!saved) {
