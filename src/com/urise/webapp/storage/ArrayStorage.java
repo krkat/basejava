@@ -12,17 +12,18 @@ public class ArrayStorage {
     private int size = 0;
 
     public void clear() {
-        if (size != 0) {
+        if (size > 0) {
             Arrays.fill(storage, 0, size, null);
             size = 0;
         }
     }
 
     public void save(Resume r) {
-        if (size == storage.length) {
+        if (size >= storage.length) {
             System.out.println("Ошибка! Хранилище переполнено.");
+            return;
         }
-        if (isPresent(r.uuid) >= 0) {
+        if (find(r.uuid) >= 0) {
             System.out.println("Ошибка! Резюме с таким uuid уже есть.");
             return;
         }
@@ -31,39 +32,20 @@ public class ArrayStorage {
     }
 
     public void update(String uuid, Resume r) {
-        int indexForUpdate = isPresent(uuid);
-        if (indexForUpdate == -1) {
-            System.out.println("Ошибка! Резюме с таким uuid нет.");
-            return;
+        if (isPresent(uuid)) {
+            storage[find(uuid)] = r;
         }
-        storage[indexForUpdate] = r;
     }
 
     public Resume get(String uuid) {
-        if (isPresent(uuid) == -1) {
-            System.out.println("Ошибка! Резюме с таким uuid нет.");
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (uuid.equals(storage[i].uuid)) {
-                    return storage[i];
-                }
-            }
-        }
-        return null;
+        return isPresent(uuid) ? storage[find(uuid)] : null;
     }
 
     public void delete(String uuid) {
-        if (isPresent(uuid) == -1) {
-            System.out.println("Ошибка! Резюме с таким uuid нет.");
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (uuid.equals(storage[i].uuid)) {
-                    storage[i] = storage[size - 1];
-                    storage[size - 1] = null;
-                    size--;
-                    break;
-                }
-            }
+        if (isPresent(uuid)) {
+            storage[find(uuid)] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
         }
     }
 
@@ -78,12 +60,20 @@ public class ArrayStorage {
         return size;
     }
 
-    private int isPresent(String uuid) {
+    private int find(String uuid) {
         for (int i = 0; i < size; i++) {
             if (uuid.equals(storage[i].uuid)) {
                 return i;
             }
         }
         return -1;
+    }
+
+    private boolean isPresent(String uuid) {
+        if (find(uuid) == -1) {
+            System.out.println("Ошибка! Резюме с таким uuid нет.");
+            return false;
+        }
+        return true;
     }
 }
