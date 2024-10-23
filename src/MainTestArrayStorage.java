@@ -22,7 +22,7 @@ public class MainTestArrayStorage {
         System.out.println("Get r1: " + ARRAY_STORAGE.get(r1.uuid));
         System.out.println("Size: " + ARRAY_STORAGE.size());
 
-        String oldUuid = r1.uuid;
+        String oldUuid = r2.uuid;
         r2.uuid = "uuid22";
         ARRAY_STORAGE.update(oldUuid, r2);
         System.out.println("Update uuid2.");
