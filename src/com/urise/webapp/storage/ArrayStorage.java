@@ -8,27 +8,20 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private static final int STORAGE_LIMIT = 10000;
-    private final Resume[] storage = new Resume[STORAGE_LIMIT];
+
+    private Resume[] storage = new Resume[10000];
     private int size = 0;
 
     public void clear() {
-        if (size > 0) {
-            Arrays.fill(storage, 0, size, null);
-            size = 0;
+        for (int i = 0; i < size; i++) {
+            storage[i] = null;
         }
+        size = 0;
+
     }
 
     public void save(Resume r) {
-        if (size >= STORAGE_LIMIT) {
-            System.out.println("Ошибка! Хранилище переполнено.");
-            return;
-        }
-        int index = findIndex(r.uuid);
-        if (index >= 0) {
-            System.out.println("Ошибка! Резюме с таким uuid уже есть.");
-            return;
-        }
+        //TODO check if resume present & check storage overflow
         storage[size] = r;
         size++;
     }
@@ -41,16 +34,23 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        int index = findIndex(uuid);
-        return isExisting(index) ? storage[index] : null;
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].uuid)) {
+                return storage[i];
+            }
+        }
+        return null;
+
     }
 
     public void delete(String uuid) {
-        int index = findIndex(uuid);
-        if (isExisting(index)) {
-            storage[index] = storage[size - 1];
-            storage[size - 1] = null;
-            size--;
+        // TODO check if resume present
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].uuid)) {
+                storage[i] = storage[size - 1];
+                storage[size - 1] = null;
+                size--;
+            }
         }
     }
 
@@ -58,7 +58,12 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
+        Resume[] result = new Resume[size];
+        for (int i = 0; i < size; i++) {
+            result[i] = storage[i];
+        }
+        return result;
+
     }
 
     public int size() {

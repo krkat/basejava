@@ -2,7 +2,7 @@ import com.urise.webapp.model.Resume;
 import com.urise.webapp.storage.ArrayStorage;
 
 /**
- * Test for your ArrayStorage implementation
+ * Test ArrayStorage
  */
 public class MainTestArrayStorage {
     static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
@@ -22,14 +22,7 @@ public class MainTestArrayStorage {
         System.out.println("Get r1: " + ARRAY_STORAGE.get(r1.uuid));
         System.out.println("Size: " + ARRAY_STORAGE.size());
 
-        String oldUuid = r2.uuid;
-        r2.uuid = "uuid22";
-        ARRAY_STORAGE.update(oldUuid, r2);
-        System.out.println("Update uuid2.");
-        System.out.println("Get uuid22: " + ARRAY_STORAGE.get(r2.uuid));
-
-        System.out.print("Get dummy: ");
-        System.out.println(ARRAY_STORAGE.get("dummy"));
+        System.out.println("Get dummy: " + ARRAY_STORAGE.get("dummy"));
 
         printAll();
         ARRAY_STORAGE.delete(r1.uuid);
