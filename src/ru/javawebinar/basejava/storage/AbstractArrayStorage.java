@@ -13,23 +13,18 @@ public abstract class AbstractArrayStorage implements Storage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
-    public int size() {
-        return size;
-    }
-
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    public final void update(Resume r) {
+    public void update(Resume r) {
         int index = getIndex(r.getUuid());
         if (index < 0) {
             System.out.println("Resume " + r.getUuid() + " not exist");
             return;
         }
-        storage[index] = r;
-        sort();
+        insert(index, r);
     }
 
     public final void save(Resume r) {
@@ -41,21 +36,8 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println("Storage overflow");
             return;
         }
-        storage[size] = r;
+        insert(size, r);
         size++;
-        sort();
-    }
-
-    public final void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            System.out.println("Resume " + uuid + " not exist");
-            return;
-        }
-        storage[index] = storage[size - 1];
-        storage[size - 1] = null;
-        size--;
-        sort();
     }
 
     public final Resume get(String uuid) {
@@ -67,12 +49,27 @@ public abstract class AbstractArrayStorage implements Storage {
         return storage[index];
     }
 
+    public void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0) {
+            System.out.println("Resume " + uuid + " not exist");
+            return;
+        }
+        delete(index);
+        size--;
+    }
+
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
+    public int size() {
+        return size;
+    }
+
     protected abstract int getIndex(String uuid);
 
-    protected void sort() {
-    }
+    protected abstract void insert(int index, Resume r);
+
+    protected abstract void delete(int index);
 }
