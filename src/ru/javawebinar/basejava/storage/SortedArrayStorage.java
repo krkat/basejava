@@ -7,22 +7,19 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected void insertResume(int index, Resume r) {
-        if (index == size) {
-            index = getIndex(r.getUuid());
-            index = index >= 0 ? index : (-1) * (index + 1);
-            System.arraycopy(storage, index, storage, index + 1, size - index);
-            storage[index] = r;
-        } else {
-            index = index >= 0 ? index : (-1) * (index + 1);
-            storage[index] = r;
+    protected void fillDeletedElement(int index) {
+        int numMoved = size - index - 1;
+        if (numMoved > 0) {
+            System.arraycopy(storage, index + 1, storage, index, numMoved);
         }
     }
 
     @Override
-    protected void deleteResume(int index) {
-        System.arraycopy(storage, index + 1, storage, index, size - index - 1);
-        storage[size - 1] = null;
+    protected void insertElement(Resume r, int index) {
+//      http://codereview.stackexchange.com/questions/36221/binary-search-for-inserting-in-array#answer-36239
+        int insertIdx = -index - 1;
+        System.arraycopy(storage, insertIdx, storage, insertIdx + 1, size - insertIdx);
+        storage[insertIdx] = r;
     }
 
     @Override
