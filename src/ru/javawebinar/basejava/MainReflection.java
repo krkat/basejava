@@ -3,6 +3,8 @@ package ru.javawebinar.basejava;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class MainReflection {
 
@@ -14,6 +16,13 @@ public class MainReflection {
         System.out.println(field.get(r));
         field.set(r, "new_uuid");
         // TODO : invoke r.toString via reflection
+        try {
+            Method method = r.getClass().getMethod("toString");
+            System.out.println(method.invoke(r));
+        } catch (NoSuchMethodException | IllegalArgumentException |
+                 IllegalAccessException | InvocationTargetException e) {
+            System.out.println(e.getMessage());
+        }
         System.out.println(r);
     }
 }
