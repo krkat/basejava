@@ -13,9 +13,9 @@ public class SortedArrayStorageTest extends AbstractArrayStorageTest{
     @Test
     public void fillDeletedElement() {
         Resume[] expected = new Resume[3];
-        expected[0] = new Resume(UUID_2);
-        expected[1] = new Resume(UUID_3);
-        expected[2] = new Resume(UUID_3);
+        expected[0] = RESUME_2;
+        expected[1] = RESUME_3;
+        expected[2] = RESUME_3;
 
         SortedArrayStorage actual = (SortedArrayStorage) storage;
         actual.fillDeletedElement(0);
@@ -24,16 +24,14 @@ public class SortedArrayStorageTest extends AbstractArrayStorageTest{
 
     @Test
     public void insertElement() {
-        Resume resume = new Resume("uuid");
-
         Resume[] expected = new Resume[4];
-        expected[0] = resume;
-        expected[1] = new Resume(UUID_1);
-        expected[2] = new Resume(UUID_2);
-        expected[3] = new Resume(UUID_3);
+        expected[0] = RESUME_1;
+        expected[1] = RESUME_2;
+        expected[2] = RESUME_3;
+        expected[3] = RESUME_4;
 
         SortedArrayStorage actual = (SortedArrayStorage) storage;
-        actual.insertElement(resume, -1);
+        actual.insertElement(RESUME_4, -4);
         for (int i = 0; i < expected.length; i++) {
             Assert.assertEquals(expected[i], actual.storage[i]);
         }
@@ -43,6 +41,6 @@ public class SortedArrayStorageTest extends AbstractArrayStorageTest{
     public void getIndex() {
         SortedArrayStorage actual = (SortedArrayStorage) storage;
         Assert.assertEquals(2, actual.getIndex(UUID_3));
-        Assert.assertEquals(-4, actual.getIndex("uuid4"));
+        Assert.assertEquals(-4, actual.getIndex(UUID_4));
     }
 }
