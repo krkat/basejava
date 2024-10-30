@@ -12,11 +12,7 @@ public class ArrayStorageTest extends AbstractArrayStorageTest{
 
     @Test
     public void fillDeletedElement() {
-        Resume[] expected = new Resume[3];
-        expected[0] = RESUME_3;
-        expected[1] = RESUME_2;
-        expected[2] = RESUME_3;
-
+        Resume[] expected = {RESUME_3, RESUME_2, RESUME_3};
         ArrayStorage actual = (ArrayStorage) storage;
         actual.fillDeletedElement(0);
         Assert.assertArrayEquals(expected, actual.getAll());
@@ -24,12 +20,7 @@ public class ArrayStorageTest extends AbstractArrayStorageTest{
 
     @Test
     public void insertElement() {
-        Resume[] expected = new Resume[4];
-        expected[0] = RESUME_1;
-        expected[1] = RESUME_2;
-        expected[2] = RESUME_3;
-        expected[3] = RESUME_4;
-
+        Resume[] expected = {RESUME_1, RESUME_2, RESUME_3, RESUME_4};
         ArrayStorage actual = (ArrayStorage) storage;
         actual.insertElement(RESUME_4, 0);
         for (int i = 0; i < expected.length; i++) {

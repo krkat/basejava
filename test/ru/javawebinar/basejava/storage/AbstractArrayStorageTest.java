@@ -48,17 +48,14 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void update() throws Exception {
-        Resume updated = RESUME_1;
+        Resume updated = new Resume(UUID_1);
         storage.update(updated);
         Assert.assertSame(updated, storage.get(updated.getUuid()));
     }
 
     @Test
     public void getAll() throws Exception {
-        Resume[] expected = new Resume[3];
-        expected[0] = RESUME_1;
-        expected[1] = RESUME_2;
-        expected[2] = RESUME_3;
+        Resume[] expected = {RESUME_1, RESUME_2, RESUME_3};
         Assert.assertArrayEquals(expected, storage.getAll());
     }
 
