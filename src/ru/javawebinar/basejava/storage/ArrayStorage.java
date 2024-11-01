@@ -10,11 +10,14 @@ public class ArrayStorage extends AbstractArrayStorage {
     @Override
     protected void fillDeletedElement(int index) {
         storage[index] = storage[size - 1];
+        super.fillDeletedElement(index);
     }
 
     @Override
     protected void insertElement(Resume r, int index) {
+        super.insertElement(r, index);
         storage[size] = r;
+        size++;
     }
 
     @Override
