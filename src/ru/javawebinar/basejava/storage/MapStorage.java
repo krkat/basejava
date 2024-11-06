@@ -2,11 +2,11 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ListStorage extends AbstractStorage {
-    private final List<Resume> storage = new ArrayList<>();
+public class MapStorage extends AbstractStorage {
+    private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     public void clear() {
@@ -15,7 +15,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
+        return storage.values().toArray(new Resume[0]);
     }
 
     @Override
@@ -25,36 +25,32 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void update(Object searchKey, Resume r) {
-        storage.set((int) searchKey, r);
+        storage.replace((String) searchKey, r);
     }
 
     @Override
     protected void insertElement(Resume r, Object searchKey) {
-        storage.add(r);
+        storage.putIfAbsent(r.getUuid(), r);
     }
 
     @Override
     protected Resume get(Object searchKey) {
-        return storage.get((int) searchKey);
+        return storage.get((String) searchKey);
     }
 
     @Override
     protected void fillDeletedElement(Object searchKey) {
-        storage.remove((int) searchKey);
+        storage.remove((String) searchKey);
     }
 
     @Override
     protected Object getSearchKey(String uuid) {
-        if (uuid == null) return -1;
-        for (int i = 0; i < storage.size(); i++) {
-            if (storage.get(i).getUuid().equals(uuid)) {
-                return i;
-            }
-        }
-        return -1;
+        if (uuid == null) return null;
+        if (storage.containsKey(uuid)) return uuid;
+        else return null;
     }
 
     protected boolean isExist(Object searchKey) {
-        return (int) searchKey >= 0;
+        return searchKey != null;
     }
 }

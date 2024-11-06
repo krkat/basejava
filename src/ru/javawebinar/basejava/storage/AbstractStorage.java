@@ -36,7 +36,7 @@ public abstract class AbstractStorage implements Storage{
 
     protected abstract void fillDeletedElement(Object searchKey);
 
-    protected abstract int getSearchKey(String uuid);
+    protected abstract Object getSearchKey(String uuid);
 
     private Object getExistingSearchKey(String uuid) {
         Object searchKey = getSearchKey(uuid);
