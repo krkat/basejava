@@ -2,11 +2,11 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MapStorage extends AbstractStorage {
-    private final Map<String, Resume> storage = new HashMap<>();
+    private final Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
     public void clear() {
@@ -24,22 +24,22 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void update(Object searchKey, Resume r) {
+    protected void doUpdate(Object searchKey, Resume r) {
         storage.replace((String) searchKey, r);
     }
 
     @Override
-    protected void insertElement(Resume r, Object searchKey) {
+    protected void doSave(Resume r, Object searchKey) {
         storage.putIfAbsent(r.getUuid(), r);
     }
 
     @Override
-    protected Resume get(Object searchKey) {
+    protected Resume doGet(Object searchKey) {
         return storage.get((String) searchKey);
     }
 
     @Override
-    protected void fillDeletedElement(Object searchKey) {
+    protected void doDelete(Object searchKey) {
         storage.remove((String) searchKey);
     }
 

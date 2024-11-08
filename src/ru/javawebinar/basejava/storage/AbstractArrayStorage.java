@@ -34,24 +34,24 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void update(Object searchKey, Resume r) {
+    protected void doUpdate(Object searchKey, Resume r) {
         storage[(int) searchKey] = r;
     }
 
-    protected void insertElement(Resume r, Object searchKey) {
+    protected void doSave(Resume r, Object searchKey) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         }
-        insert(r, searchKey);
+        insertResume(r, searchKey);
         size++;
     }
 
-    protected Resume get(Object searchKey) {
+    protected Resume doGet(Object searchKey) {
         return storage[(int) searchKey];
     }
 
-    protected void fillDeletedElement(Object searchKey) {
-        delete(searchKey);
+    protected void doDelete(Object searchKey) {
+        fillDeletedElement(searchKey);
         storage[size - 1] = null;
         size--;
     }
@@ -60,7 +60,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return (int) searchKey >= 0;
     }
 
-    protected abstract void insert(Resume r, Object searchKey);
+    protected abstract void insertResume(Resume r, Object searchKey);
 
-    protected abstract void delete(Object searchKey);
+    protected abstract void fillDeletedElement(Object searchKey);
 }
