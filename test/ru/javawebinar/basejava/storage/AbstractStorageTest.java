@@ -18,10 +18,10 @@ public abstract class AbstractStorageTest {
     protected static final String UUID_3 = "uuid3";
     protected static final String UUID_4 = "uuid4";
 
-    protected static final String FULL_NAME_1 = "fullname1";
-    protected static final String FULL_NAME_2 = "fullname2";
-    protected static final String FULL_NAME_3 = "fullname3";
-    protected static final String FULL_NAME_4 = "fullname4";
+    protected static final String FULL_NAME_1 = "name1";
+    protected static final String FULL_NAME_2 = "name2";
+    protected static final String FULL_NAME_3 = "name3";
+    protected static final String FULL_NAME_4 = "name4";
 
     protected static final Resume RESUME_1;
     protected static final Resume RESUME_2;
@@ -69,7 +69,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() throws Exception {
-        Resume newResume = new Resume(UUID_1);
+        Resume newResume = new Resume(UUID_1, FULL_NAME_1);
         storage.update(newResume);
         assertSame(newResume, storage.get(UUID_1));
     }
