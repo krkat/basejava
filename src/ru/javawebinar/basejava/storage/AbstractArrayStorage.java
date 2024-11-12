@@ -15,6 +15,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected int size = 0;
 
     @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
@@ -29,38 +34,35 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public int size() {
-        return size;
+    protected void doUpdate(Resume r, Object index) {
+        storage[(Integer) index] = r;
     }
 
-    @Override
-    protected void doUpdate(Object searchKey, Resume r) {
-        storage[(int) searchKey] = r;
-    }
-
-    protected void doSave(Resume r, Object searchKey) {
+    protected void doSave(Resume r, Object index) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         }
-        insertResume(r, searchKey);
+        insertResume(r, (Integer) index);
         size++;
     }
 
-    protected Resume doGet(Object searchKey) {
-        return storage[(int) searchKey];
+    protected Resume doGet(Object index) {
+        return storage[(Integer) index];
     }
 
-    protected void doDelete(Object searchKey) {
-        fillDeletedElement(searchKey);
+    protected void doDelete(Object index) {
+        fillDeletedElement((int) index);
         storage[size - 1] = null;
         size--;
     }
 
-    protected boolean isExist(Object searchKey) {
-        return (int) searchKey >= 0;
+    protected boolean isExist(Object index) {
+        return (Integer) index >= 0;
     }
 
-    protected abstract void insertResume(Resume r, Object searchKey);
+    protected abstract void insertResume(Resume r, int index);
 
-    protected abstract void fillDeletedElement(Object searchKey);
+    protected abstract void fillDeletedElement(int index);
+
+    protected abstract Integer getSearchKey(String uuid);
 }
