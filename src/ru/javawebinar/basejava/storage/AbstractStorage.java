@@ -36,7 +36,8 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return Arrays.stream(getAll()).sorted(Comparator.comparing(Resume::getUuid)).toList();
+        return Arrays.stream(getAll()).sorted(Comparator.comparing(Resume::getFullName)
+                        .thenComparing(Resume::getUuid)).toList();
     }
 
     private Object getExistingSearchKey(String uuid) {
