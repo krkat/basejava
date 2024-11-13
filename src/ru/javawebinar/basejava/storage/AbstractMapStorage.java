@@ -22,8 +22,4 @@ public abstract class AbstractMapStorage extends AbstractStorage {
     public Resume[] getAll() {
         return storage.values().toArray(new Resume[0]);
     }
-
-    protected boolean isExist(Object searchKey) {
-        return searchKey != null;
-    }
 }

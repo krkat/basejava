@@ -26,12 +26,10 @@ public class MapResumeStorage extends AbstractMapStorage {
 
     @Override
     protected Object getSearchKey(String uuid) {
-        if (uuid == null) {
-            return null;
-        }
-        if (storage.containsKey(uuid)) {
-            return storage.get(uuid);
-        }
-        return null;
+        return storage.get(uuid);
+    }
+
+    protected boolean isExist(Object searchKey) {
+        return searchKey != null;
     }
 }
