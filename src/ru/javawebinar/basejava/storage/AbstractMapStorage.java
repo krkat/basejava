@@ -2,8 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractMapStorage extends AbstractStorage {
     protected final Map<String, Resume> storage = new LinkedHashMap<>();
@@ -19,7 +18,7 @@ public abstract class AbstractMapStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        return storage.values().toArray(new Resume[0]);
+    public List<Resume> doCopyAll() {
+        return new ArrayList<>(storage.values());
     }
 }
