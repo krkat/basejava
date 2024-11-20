@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends Section {
-    private List<String> items;
+    private final List<String> items;
 
     public ListSection(List<String> items) {
+        Objects.requireNonNull(items, "items must not be null");
         this.items = items;
     }
 
@@ -15,17 +16,6 @@ public class ListSection extends Section {
         return Collections.unmodifiableList(items);
     }
 
-    public void setItems(List<String> items) {
-        this.items = items;
-    }
-
-    public void addItem(String item) {
-        items.add(item);
-    }
-
-    public void deleteItem(String item) {
-        items.remove(item);
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -42,10 +32,6 @@ public class ListSection extends Section {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String item : items) {
-            stringBuilder.append("*").append(item).append("\n");
-        }
-        return stringBuilder.toString();
+        return items.toString();
     }
 }

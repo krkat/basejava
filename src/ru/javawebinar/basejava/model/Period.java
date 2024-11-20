@@ -9,9 +9,12 @@ public class Period {
     private final String position;
     private final String description;
 
-    public Period(LocalDate start, LocalDate end, String position, String description) {
-        this.startDate = start;
-        this.endDate = end;
+    public Period(LocalDate startDate, LocalDate endDate, String position, String description) {
+        Objects.requireNonNull(startDate, "startDate must not be null");
+        Objects.requireNonNull(endDate, "endDate must not be null");
+        Objects.requireNonNull(position, "title must not be null");
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.position = position;
         this.description = description;
     }

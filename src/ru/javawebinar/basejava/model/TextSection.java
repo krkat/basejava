@@ -2,19 +2,16 @@ package ru.javawebinar.basejava.model;
 
 import java.util.Objects;
 
-public class TextSection extends Section{
-    private String text;
+public class TextSection extends Section {
+    private final String content;
 
-    public TextSection(String text) {
-        this.text = text;
+    public TextSection(String content) {
+        Objects.requireNonNull(content, "content must not be null");
+        this.content = content;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
+    public String getContent() {
+        return content;
     }
 
     @Override
@@ -22,16 +19,16 @@ public class TextSection extends Section{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TextSection that = (TextSection) o;
-        return Objects.equals(text, that.text);
+        return Objects.equals(content, that.content);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(text);
+        return Objects.hashCode(content);
     }
 
     @Override
     public String toString() {
-        return text;
+        return content;
     }
 }
