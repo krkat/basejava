@@ -3,16 +3,10 @@ package ru.javawebinar.basejava.model;
 import java.util.*;
 
 public class Contact {
-    private final ContactType contactType;
     private String contact;
 
-    public Contact(ContactType contactType, String contact) {
-        this.contactType = contactType;
+    public Contact(String contact) {
         this.contact = contact;
-    }
-
-    public ContactType getContactType() {
-        return contactType;
     }
 
     public String getContact() {
@@ -28,12 +22,12 @@ public class Contact {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contact contact1 = (Contact) o;
-        return contactType == contact1.contactType && Objects.equals(contact, contact1.contact);
+        return Objects.equals(contact, contact1.contact);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(contactType, contact);
+        return Objects.hashCode(contact);
     }
 
     @Override

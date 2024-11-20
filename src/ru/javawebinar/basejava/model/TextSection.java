@@ -2,18 +2,11 @@ package ru.javawebinar.basejava.model;
 
 import java.util.Objects;
 
-public class TextSection implements Section{
-    private final SectionType sectionType;
+public class TextSection extends Section{
     private String text;
 
-    public TextSection(SectionType sectionType, String text) {
-        this.sectionType = sectionType;
+    public TextSection(String text) {
         this.text = text;
-    }
-
-    @Override
-    public SectionType getSectionType() {
-        return sectionType;
     }
 
     public String getText() {
@@ -22,11 +15,6 @@ public class TextSection implements Section{
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    @Override
-    public void print() {
-        System.out.println(this);
     }
 
     @Override

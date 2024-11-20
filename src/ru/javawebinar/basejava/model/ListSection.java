@@ -4,18 +4,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class ListSection implements Section {
-    private final SectionType sectionType;
+public class ListSection extends Section {
     private List<String> items;
 
-    public ListSection(SectionType sectionType, List<String> items) {
-        this.sectionType = sectionType;
+    public ListSection(List<String> items) {
         this.items = items;
-    }
-
-    @Override
-    public SectionType getSectionType() {
-        return sectionType;
     }
 
     public List<String> getItems() {
@@ -35,15 +28,10 @@ public class ListSection implements Section {
     }
 
     @Override
-    public void print() {
-        System.out.println(this);
-    }
-
-    @Override
-    public boolean equals(Object resume) {
-        if (this == resume) return true;
-        if (resume == null || getClass() != resume.getClass()) return false;
-        ListSection that = (ListSection) resume;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ListSection that = (ListSection) o;
         return Objects.equals(items, that.items);
     }
 

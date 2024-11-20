@@ -43,39 +43,35 @@ public class Resume implements Comparable<Resume> {
         return Collections.unmodifiableMap(sections);
     }
 
-    public void addContact(Contact contact) {
-        ContactType key = contact.getContactType();
-        if (!contacts.containsKey(key)) {
+    public void addContact(ContactType contactType, Contact contact) {
+        if (!contacts.containsKey(contactType)) {
             List<Contact> list = new ArrayList<>();
             list.add(contact);
-            contacts.put(key, list);
+            contacts.put(contactType, list);
         } else {
-            contacts.get(key).add(contact);
+            contacts.get(contactType).add(contact);
         }
     }
 
-    public void deleteContact(Contact contact) {
-        ContactType key = contact.getContactType();
-        if (contacts.containsKey(key)) {
-            contacts.get(key).remove(contact);
+    public void deleteContact(ContactType contactType, Contact contact) {
+        if (contacts.containsKey(contactType)) {
+            contacts.get(contactType).remove(contact);
         }
     }
 
-    public void addSection(Section section) {
-        SectionType key = section.getSectionType();
-        if (!sections.containsKey(key)) {
+    public void addSection(SectionType sectionType, Section section) {
+        if (!sections.containsKey(sectionType)) {
             List<Section> list = new ArrayList<>();
             list.add(section);
-            sections.put(key, list);
+            sections.put(sectionType, list);
         } else {
-            sections.get(key).add(section);
+            sections.get(sectionType).add(section);
         }
     }
 
-    public void deleteSection(Section section) {
-        SectionType key = section.getSectionType();
-        if (sections.containsKey(key)) {
-            sections.get(key).remove(section);
+    public void deleteSection(SectionType sectionType, Section section) {
+        if (sections.containsKey(sectionType)) {
+            sections.get(sectionType).remove(section);
         }
     }
 

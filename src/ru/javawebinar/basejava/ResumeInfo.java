@@ -3,7 +3,6 @@ package ru.javawebinar.basejava;
 import ru.javawebinar.basejava.model.CompanySection;
 import ru.javawebinar.basejava.model.Period;
 import ru.javawebinar.basejava.model.Section;
-import ru.javawebinar.basejava.model.SectionType;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -49,76 +48,63 @@ public class ResumeInfo {
             "Родной русский, английский \"upper intermediate\""
     ));
 
-    static final Period periodJavaOps = new Period(LocalDate.of(2013, 10, 01),
+    static final Period periodJavaOps = new Period(LocalDate.of(2013, 10, 1),
             LocalDate.now(),
             "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.");
-    static final Period periodWrike = new Period(LocalDate.of(2014, 10, 01),
-            LocalDate.of(2016, 01, 01),
+    static final Period periodWrike = new Period(LocalDate.of(2014, 10, 1),
+            LocalDate.of(2016, 1, 1),
             "Старший разработчик (backend)",
             "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
-    static final Period periodRIT = new Period(LocalDate.of(2012, 4, 01),
+    static final Period periodRIT = new Period(LocalDate.of(2012, 4, 1),
             LocalDate.of(2014, 10, 1),
             "Java архитектор", "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python");
-    static final Period periodLuxsoft = new Period(LocalDate.of(2010, 12, 01),
+    static final Period periodLuxsoft = new Period(LocalDate.of(2010, 12, 1),
             LocalDate.of(2012, 4, 1),
             "Ведущий программист", "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5.");
     static final Period periodYota = new Period(LocalDate.of(2008, 6, 1),
             LocalDate.of(2010, 12, 1),
             "Ведущий специалист", "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" (GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). Реализация администрирования, статистики и мониторинга фреймворка. Разработка online JMX клиента (Python/ Jython, Django, ExtJS)");
-    static final Period periodEnkata = new Period(LocalDate.of(2007, 3, 01),
+    static final Period periodEnkata = new Period(LocalDate.of(2007, 3, 1),
             LocalDate.of(2008, 6, 1),
             "Разработчик ПО", "Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, Tomcat, JMS) частей кластерного J2EE приложения (OLAP, Data mining).");
-    static final Period periodSiemens = new Period(LocalDate.of(2005, 1, 01),
+    static final Period periodSiemens = new Period(LocalDate.of(2005, 1, 1),
             LocalDate.of(2007, 2, 1),
             "Разработчик ПО", "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной IN платформе Siemens @vantage (Java, Unix).");
-    static final Period periodAlcatel = new Period(LocalDate.of(1997, 9, 01),
+    static final Period periodAlcatel = new Period(LocalDate.of(1997, 9, 1),
             LocalDate.of(2005, 1, 1),
             "Инженер по аппаратному и программному тестированию", "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM).");
 
-    static final Section JAVA_ONLINE_PROJECTS = new CompanySection.CompanySectionBuilder(SectionType.EXPERIENCE, "Java Online Projects")
-            .setWebsite("http://javaops.ru/").setPeriods(List.of(periodJavaOps)).build();
-    static final Section WRIKE = new CompanySection.CompanySectionBuilder(SectionType.EXPERIENCE, "Wrike")
-            .setWebsite("https://www.wrike.com/").setPeriods(List.of(periodWrike)).build();
-    static final Section RIT = new CompanySection.CompanySectionBuilder(SectionType.EXPERIENCE, "RIT Center")
-            .setWebsite("").setPeriods(List.of(periodRIT)).build();
-    static final Section LUXOFT = new CompanySection.CompanySectionBuilder(SectionType.EXPERIENCE, "Luxoft (Deutsche Bank)")
-            .setWebsite("http://www.luxoft.ru/").setPeriods(List.of(periodLuxsoft)).build();
-    static final Section YOTA = new CompanySection.CompanySectionBuilder(SectionType.EXPERIENCE, "Yota")
-            .setWebsite("https://www.yota.ru/").setPeriods(List.of(periodYota)).build();
-    static final Section ENKATA = new CompanySection.CompanySectionBuilder(SectionType.EXPERIENCE, "Enkata")
-            .setWebsite("http://enkata.com/").setPeriods(List.of(periodEnkata)).build();
-    static final Section SIEMENS_AG = new CompanySection.CompanySectionBuilder(SectionType.EXPERIENCE, "Siemens AG")
-            .setWebsite("https://www.siemens.com/ru/ru/home.html").setPeriods(List.of(periodSiemens)).build();
-    static final Section ALCATEL = new CompanySection.CompanySectionBuilder(SectionType.EXPERIENCE, "Alcatel")
-            .setWebsite("http://www.alcatel.ru/").setPeriods(List.of(periodAlcatel)).build();
+    static final Section JAVA_ONLINE_PROJECTS = new CompanySection("Java Online Projects", "http://javaops.ru/", List.of(periodJavaOps));
+    static final Section WRIKE = new CompanySection("Wrike", "https://www.wrike.com/", List.of(periodWrike));
+    static final Section RIT = new CompanySection("RIT Center", "", List.of(periodRIT));
+    static final Section LUXOFT = new CompanySection( "Luxoft (Deutsche Bank)", "http://www.luxoft.ru/", List.of(periodLuxsoft));
+    static final Section YOTA = new CompanySection("Yota", "https://www.yota.ru/", List.of(periodYota));
+    static final Section ENKATA = new CompanySection( "Enkata", "http://enkata.com/", List.of(periodEnkata));
+    static final Section SIEMENS_AG = new CompanySection("Siemens AG", "https://www.siemens.com/ru/ru/home.html", List.of(periodSiemens));
+    static final Section ALCATEL = new CompanySection("Alcatel", "http://www.alcatel.ru/", List.of(periodAlcatel));
 
-    static final Period periodCourseraEdu = new Period(LocalDate.of(2013, 03, 01),
-            LocalDate.of(2013, 05, 01),
+    static final Period periodCourseraEdu = new Period(LocalDate.of(2013, 3, 1),
+            LocalDate.of(2013, 5, 1),
             "Студент", "'Functional Programming Principles in Scala' by Martin Odersky");
-    static final Period periodLuxoftEdu = new Period(LocalDate.of(2011, 03, 01),
-            LocalDate.of(2011, 04, 01),
+    static final Period periodLuxoftEdu = new Period(LocalDate.of(2011, 3, 1),
+            LocalDate.of(2011, 4, 1),
             "Студент", "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'");
-    static final Period periodSiemensEdu = new Period(LocalDate.of(2005, 1, 01),
+    static final Period periodSiemensEdu = new Period(LocalDate.of(2005, 1, 1),
             LocalDate.of(2005, 4, 1),
             "Студент", "3 месяца обучения мобильным IN сетям (Берлин)");
-    static final Period periodAlcatelEdu = new Period(LocalDate.of(1997, 9, 01),
+    static final Period periodAlcatelEdu = new Period(LocalDate.of(1997, 9, 1),
             LocalDate.of(1998, 3, 1),
             "Студент", "6 месяцев обучения цифровым телефонным сетям (Москва)");
     static final Period periodPostgraduate = new Period(LocalDate.of(1993, 9, 1),
-            LocalDate.of(1996, 07, 1),
+            LocalDate.of(1996, 7, 1),
             "Студент", "Аспирантура (программист С, С++)");
-    static final Period periodStudent = new Period(LocalDate.of(1987, 9, 01),
-            LocalDate.of(1993, 07, 1),
+    static final Period periodStudent = new Period(LocalDate.of(1987, 9, 1),
+            LocalDate.of(1993, 7, 1),
             "Студент", "Инженер (программист Fortran, C)");
 
-    static final Section COURSERA = new CompanySection.CompanySectionBuilder(SectionType.EDUCATION, "Coursera")
-            .setWebsite("https://www.coursera.org/course/progfun").setPeriods(List.of(periodCourseraEdu)).build();
-    static final Section LUXOFT_EDU = new CompanySection.CompanySectionBuilder(SectionType.EDUCATION, "Luxoft")
-            .setWebsite("http://www.luxoft-training.ru/training/catalog/course.html?ID=22366").setPeriods(List.of(periodLuxoftEdu)).build();
-    static final Section SIEMENS_EDU = new CompanySection.CompanySectionBuilder(SectionType.EDUCATION, "Siemens AG")
-            .setWebsite("http://www.siemens.ru/").setPeriods(List.of(periodSiemensEdu)).build();
-    static final Section ALCATEL_EDU = new CompanySection.CompanySectionBuilder(SectionType.EDUCATION, "Alcatel")
-            .setWebsite("http://www.alcatel.ru/").setPeriods(List.of(periodAlcatelEdu)).build();
-    static final Section UNIVERSITY = new CompanySection.CompanySectionBuilder(SectionType.EDUCATION, "Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики")
-            .setWebsite("http://www.ifmo.ru/").setPeriods(List.of(periodPostgraduate, periodStudent)).build();
+    static final Section COURSERA = new CompanySection("Coursera", "https://www.coursera.org/course/progfun", List.of(periodCourseraEdu));
+    static final Section LUXOFT_EDU = new CompanySection("Luxoft", "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366", List.of(periodLuxoftEdu));
+    static final Section SIEMENS_EDU = new CompanySection("Siemens AG", "http://www.siemens.ru/", List.of(periodSiemensEdu));
+    static final Section ALCATEL_EDU = new CompanySection("Alcatel", "http://www.alcatel.ru/", List.of(periodAlcatelEdu));
+    static final Section UNIVERSITY = new CompanySection("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://www.ifmo.ru/", List.of(periodPostgraduate, periodStudent));
 }
