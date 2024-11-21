@@ -5,6 +5,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,12 +29,24 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-
+        try {
+            for (File f : Objects.requireNonNull(directory.listFiles())) {
+                f.delete();
+            }
+        } catch (NullPointerException e) {
+            throw new StorageException("Directory is empty", directory.getName(), e);
+        }
     }
 
     @Override
     public int size() {
-        return 0;
+        int size;
+        try {
+            size = Objects.requireNonNull(directory.listFiles()).length;
+        } catch (NullPointerException e) {
+            throw new StorageException("Directory is empty", directory.getName(), e);
+        }
+        return size;
     }
 
     @Override
@@ -43,7 +56,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doUpdate(Resume r, File file) {
-
+        try {
+            doWrite(r, file);
+        } catch (IOException e) {
+            throw new StorageException("IO error", file.getName(), e);
+        }
     }
 
     @Override
@@ -63,18 +80,36 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     protected abstract void doWrite(Resume r, File file) throws IOException;
 
+    protected abstract Resume doRead(File file) throws IOException;
+
     @Override
     protected Resume doGet(File file) {
-        return null;
+        Resume resume;
+        try {
+            resume = doRead(file);
+        } catch (IOException e) {
+            throw new StorageException("IO error", file.getName(), e);
+        }
+        return resume;
     }
 
     @Override
     protected void doDelete(File file) {
-
+        file.delete();
     }
 
     @Override
     protected List<Resume> doCopyAll() {
-        return null;
+        List<Resume> resumes = new ArrayList<>();
+        try {
+            for (File f : Objects.requireNonNull(directory.listFiles())) {
+                resumes.add(doRead(f));
+            }
+        } catch (NullPointerException e) {
+          throw new StorageException("Directory is empty", directory.getName(), e);
+        } catch (IOException e) {
+            throw new StorageException("IO error", directory.getName(), e);
+        }
+        return resumes;
     }
 }
