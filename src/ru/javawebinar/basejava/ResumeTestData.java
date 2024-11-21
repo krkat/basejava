@@ -55,4 +55,13 @@ public class ResumeTestData {
         resume.addSection(SectionType.EDUCATION,ResumeInfo.ALCATEL_EDU);
         resume.addSection(SectionType.EDUCATION,ResumeInfo.UNIVERSITY);
     }
+
+    public static Resume createResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
+        addContacts(resume);
+        addTextSections(resume);
+        addListSections(resume);
+        addCompanySections(resume);
+        return resume;
+    }
 }
