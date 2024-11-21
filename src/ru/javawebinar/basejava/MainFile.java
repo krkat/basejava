@@ -33,5 +33,20 @@ public class MainFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        System.out.println("\n\n======================================================");
+        System.out.println("Рекурсивный вывод имен файлов:");
+        printFileNames(dir);
+    }
+
+    private static void printFileNames(File file) {
+        if (file.isFile()) {
+            System.out.println(file.getName());
+        } else if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            for (File f : files) {
+                printFileNames(f);
+            }
+        }
     }
 }
