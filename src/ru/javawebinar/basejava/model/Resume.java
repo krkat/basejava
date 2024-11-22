@@ -14,7 +14,7 @@ public class Resume implements Comparable<Resume> {
 
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
-    private final Map<SectionType, List<Section>> sections = new LinkedHashMap<>();
+    private final Map<SectionType, List<Section>> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
