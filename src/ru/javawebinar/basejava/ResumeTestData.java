@@ -15,14 +15,13 @@ public class ResumeTestData {
     }
 
     private static void addContacts(Resume resume) {
-        resume.addContact(ContactType.PHONE, new Contact(ResumeInfo.PHONE));
-        resume.addContact(ContactType.PHONE, new Contact(ResumeInfo.PHONE_2));
-        resume.addContact(ContactType.SKYPE, new Contact(ResumeInfo.SKYPE));
-        resume.addContact(ContactType.EMAIL, new Contact(ResumeInfo.EMAIL));
-        resume.addContact(ContactType.LINKEDIN, new Contact(ResumeInfo.LINKEDIN));
-        resume.addContact(ContactType.GITHUB, new Contact(ResumeInfo.GITHUB));
-        resume.addContact(ContactType.STACKOVERFLOW, new Contact(ResumeInfo.STACKOVERFLOW));
-        resume.addContact(ContactType.HOME_PAGE, new Contact(ResumeInfo.HOME_PAGE));
+        resume.addContact(ContactType.PHONE, ResumeInfo.PHONE);
+        resume.addContact(ContactType.SKYPE, ResumeInfo.SKYPE);
+        resume.addContact(ContactType.EMAIL, ResumeInfo.EMAIL);
+        resume.addContact(ContactType.LINKEDIN, ResumeInfo.LINKEDIN);
+        resume.addContact(ContactType.GITHUB, ResumeInfo.GITHUB);
+        resume.addContact(ContactType.STACKOVERFLOW, ResumeInfo.STACKOVERFLOW);
+        resume.addContact(ContactType.HOME_PAGE, ResumeInfo.HOME_PAGE);
     }
 
     private static void addTextSections(Resume resume) {

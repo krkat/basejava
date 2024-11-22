@@ -11,7 +11,6 @@ import java.util.List;
 
 public class ResumeInfo {
     static final String PHONE = "+7(921) 855-0482";
-    static final String PHONE_2 = "+7(921) 855-4444";
     static final String SKYPE = "skype:grigory.kislin";
     static final String EMAIL = "gkislin@yandex.ru";
     static final String LINKEDIN = "https://www.linkedin.com/in/gkislin";

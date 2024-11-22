@@ -12,7 +12,7 @@ public class Resume implements Comparable<Resume> {
 
     private final String fullName;
 
-    private final Map<ContactType, List<Contact>> contacts = new LinkedHashMap<>();
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
     private final Map<SectionType, List<Section>> sections = new LinkedHashMap<>();
 
@@ -35,7 +35,11 @@ public class Resume implements Comparable<Resume> {
         return fullName;
     }
 
-    public Map<ContactType, List<Contact>> getContacts() {
+    public String getContact(ContactType type) {
+        return contacts.get(type);
+    }
+
+    public Map<ContactType, String> getContacts() {
         return Collections.unmodifiableMap(contacts);
     }
 
@@ -43,20 +47,8 @@ public class Resume implements Comparable<Resume> {
         return Collections.unmodifiableMap(sections);
     }
 
-    public void addContact(ContactType contactType, Contact contact) {
-        if (!contacts.containsKey(contactType)) {
-            List<Contact> list = new ArrayList<>();
-            list.add(contact);
-            contacts.put(contactType, list);
-        } else {
-            contacts.get(contactType).add(contact);
-        }
-    }
-
-    public void deleteContact(ContactType contactType, Contact contact) {
-        if (contacts.containsKey(contactType)) {
-            contacts.get(contactType).remove(contact);
-        }
+    public void addContact(ContactType contactType, String contact) {
+        contacts.put(contactType, contact);
     }
 
     public void addSection(SectionType sectionType, Section section) {
@@ -77,12 +69,10 @@ public class Resume implements Comparable<Resume> {
 
     public void print() {
         System.out.println(fullName);
-        for(Map.Entry<ContactType, List<Contact>> entry : contacts.entrySet()) {
-            System.out.print(entry.getKey().getTitle() + ": ");
-            entry.getValue().forEach((c) -> System.out.print(c + " "));
+        for(Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            System.out.print(entry.getKey().getTitle() + ": " + entry.getValue());
             System.out.println();
         }
-        System.out.println();
         for(Map.Entry<SectionType, List<Section>> entry : sections.entrySet()) {
             System.out.println(entry.getKey().getTitle() + "\n");
             entry.getValue().forEach(System.out::println);
