@@ -14,7 +14,7 @@ import java.util.Objects;
  * 22.07.2016
  */
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
-    private File directory;
+    private final File directory;
 
     protected AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
@@ -29,24 +29,22 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        try {
-            for (File f : Objects.requireNonNull(directory.listFiles())) {
-                f.delete();
-            }
-        } catch (NullPointerException e) {
-            throw new StorageException("Directory is empty", directory.getName(), e);
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Directory is empty", directory.getName());
+        }
+        for (File f : files) {
+            doDelete(f);
         }
     }
 
     @Override
     public int size() {
-        int size;
-        try {
-            size = Objects.requireNonNull(directory.listFiles()).length;
-        } catch (NullPointerException e) {
-            throw new StorageException("Directory is empty", directory.getName(), e);
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Directory is empty", directory.getName());
         }
-        return size;
+        return files.length;
     }
 
     @Override
@@ -100,13 +98,15 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doCopyAll() {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Directory is empty", directory.getName());
+        }
         List<Resume> resumes = new ArrayList<>();
         try {
-            for (File f : Objects.requireNonNull(directory.listFiles())) {
+            for (File f : files) {
                 resumes.add(doRead(f));
             }
-        } catch (NullPointerException e) {
-          throw new StorageException("Directory is empty", directory.getName(), e);
         } catch (IOException e) {
             throw new StorageException("IO error", directory.getName(), e);
         }
