@@ -93,7 +93,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File file) {
-        file.delete();
+        if (!file.delete()) {
+            throw new StorageException("File was not deleted", file.getName());
+        }
     }
 
     @Override
@@ -103,12 +105,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             throw new StorageException("Directory is empty", directory.getName());
         }
         List<Resume> resumes = new ArrayList<>();
-        try {
-            for (File f : files) {
-                resumes.add(doRead(f));
-            }
-        } catch (IOException e) {
-            throw new StorageException("IO error", directory.getName(), e);
+        for (File f : files) {
+            resumes.add(doGet(f));
         }
         return resumes;
     }
