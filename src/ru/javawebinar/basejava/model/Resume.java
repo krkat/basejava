@@ -47,17 +47,17 @@ public class Resume implements Comparable<Resume> {
         return Collections.unmodifiableMap(sections);
     }
 
-    public void addContact(ContactType contactType, String contact) {
-        contacts.put(contactType, contact);
+    public void addContact(ContactType type, String contact) {
+        contacts.put(type, contact);
     }
 
-    public void addSection(SectionType sectionType, Section section) {
-        if (!sections.containsKey(sectionType)) {
+    public void addSection(SectionType type, Section section) {
+        if (!sections.containsKey(type)) {
             List<Section> list = new ArrayList<>();
             list.add(section);
-            sections.put(sectionType, list);
+            sections.put(type, list);
         } else {
-            sections.get(sectionType).add(section);
+            sections.get(type).add(section);
         }
     }
 
