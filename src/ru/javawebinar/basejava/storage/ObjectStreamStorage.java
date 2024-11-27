@@ -1,29 +1,36 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.storage.strategy.Strategy;
+import ru.javawebinar.basejava.storage.strategy.SerializationStrategy;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-public class ObjectStreamStorage extends AbstractFileStorage implements Strategy {
-    protected ObjectStreamStorage(File directory) {
+public class ObjectStreamStorage extends AbstractFileStorage implements SerializationStrategy {
+    private SerializationStrategy serializationStrategy;
+
+    protected ObjectStreamStorage(File directory, SerializationStrategy serializationStrategy) {
         super(directory);
+        this.serializationStrategy = serializationStrategy;
+    }
+
+    public SerializationStrategy getSerializationStrategy() {
+        return serializationStrategy;
+    }
+
+    public void setSerializationStrategy(SerializationStrategy serializationStrategy) {
+        this.serializationStrategy = serializationStrategy;
     }
 
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
-        try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
-            oos.writeObject(r);
-        }
+        serializationStrategy.doWrite(r, os);
     }
 
     @Override
     public Resume doRead(InputStream is) throws IOException {
-        try (ObjectInputStream ois = new ObjectInputStream(is)) {
-            return (Resume) ois.readObject();
-        } catch (ClassNotFoundException e) {
-            throw new StorageException("Error read resume", null, e);
-        }
+        return serializationStrategy.doRead(is);
     }
 }
