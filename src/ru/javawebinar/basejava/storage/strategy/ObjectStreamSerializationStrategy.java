@@ -7,9 +7,6 @@ import java.io.*;
 
 public class ObjectStreamSerializationStrategy implements SerializationStrategy {
 
-    public ObjectStreamSerializationStrategy() {
-    }
-
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(os)) {

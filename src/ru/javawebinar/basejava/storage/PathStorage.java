@@ -3,17 +3,16 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.strategy.SerializationStrategy;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class ObjectStreamStorage extends AbstractFileStorage implements SerializationStrategy {
+public class PathStorage extends AbstractPathStorage {
     private SerializationStrategy serializationStrategy;
 
-    protected ObjectStreamStorage(File directory, SerializationStrategy serializationStrategy) {
+    protected PathStorage(String directory, SerializationStrategy strategy) {
         super(directory);
-        this.serializationStrategy = serializationStrategy;
+        this.serializationStrategy = strategy;
     }
 
     public SerializationStrategy getSerializationStrategy() {
