@@ -6,8 +6,11 @@ import java.util.Objects;
 
 public class CompanySection extends Section{
     private static final long serialVersionUID = 1L;
-    private final Link homepage;
+    private Link homepage;
     private List<Period> periods;
+
+    public CompanySection() {
+    }
 
     public CompanySection(String name, String website, List<Period> periods) {
         Objects.requireNonNull(periods, "organizations must not be null");
