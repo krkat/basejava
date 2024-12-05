@@ -5,6 +5,7 @@ import ru.javawebinar.basejava.model.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -34,10 +35,7 @@ public class DataStreamSerializer implements StreamSerializer {
     private static void writeContacts(Resume r, DataOutputStream dos) throws IOException {
         Map<ContactType, String> contacts = r.getContacts();
         dos.writeInt(contacts.size());
-        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-            dos.writeUTF(entry.getKey().name());
-            dos.writeUTF(entry.getValue());
-        }
+        writeWithException(contacts.entrySet(), dos, new MapEntryWriter());
     }
 
     private static void writeSections(Resume r, DataOutputStream dos) throws IOException {
@@ -65,23 +63,28 @@ public class DataStreamSerializer implements StreamSerializer {
     private static void writeListSection(Section section, DataOutputStream dos) throws IOException {
         List<String> items = ((ListSection) section).getItems();
         dos.writeInt(items.size());
-        for (String item : items) {
-            dos.writeUTF(item);
-        }
+        writeWithException(items, dos, new StringWriter());
     }
 
     private static void writeCompanySection(Section section, DataOutputStream dos) throws IOException {
-        dos.writeUTF(((CompanySection) section).getName());
-        dos.writeUTF(((CompanySection) section).getWebsite());
+        String name = ((CompanySection) section).getName();
+        String website = ((CompanySection) section).getWebsite();
+        if (name != null) {
+            dos.writeBoolean(true);
+            dos.writeUTF(((CompanySection) section).getName());
+        } else {
+            dos.writeBoolean(false);
+        }
+        if (website != null) {
+            dos.writeBoolean(true);
+            dos.writeUTF(((CompanySection) section).getWebsite());
+        } else {
+            dos.writeBoolean(false);
+        }
 
         List<Period> periods = ((CompanySection) section).getPeriods();
         dos.writeInt(periods.size());
-        for (Period period : periods) {
-            dos.writeUTF(period.getStartDate().toString());
-            dos.writeUTF(period.getEndDate().toString());
-            dos.writeUTF(period.getPosition());
-            dos.writeUTF(period.getDescription());
-        }
+        writeWithException(periods, dos, new PeriodWriter());
     }
 
     private static void readContacts(Resume resume, DataInputStream dis) throws IOException {
@@ -121,8 +124,15 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private static Section readCompanySection(DataInputStream dis) throws IOException {
-        String name = dis.readUTF();
-        String website = dis.readUTF();
+        String name = null;
+        String website = null;
+
+        if (dis.readBoolean()) {
+            name = dis.readUTF();
+        }
+        if (dis.readBoolean()) {
+            website = dis.readUTF();
+        }
         int size = dis.readInt();
         List<Period> periods = new ArrayList<>();
         for (int i = 0; i < size; i++) {
@@ -133,5 +143,11 @@ public class DataStreamSerializer implements StreamSerializer {
             periods.add(new Period(startDate, endDate, position, description));
         }
         return new CompanySection(name, website, periods);
+    }
+
+    private static <T> void writeWithException(Collection<T> collection, DataOutputStream dos,  CustomConsumer<T,DataOutputStream> consumer) throws IOException {
+        for (T obj : collection) {
+            consumer.write(obj, dos);
+        }
     }
 }
