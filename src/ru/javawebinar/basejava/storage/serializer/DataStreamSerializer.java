@@ -34,26 +34,26 @@ public class DataStreamSerializer implements StreamSerializer {
 
     private static void writeContacts(Resume r, DataOutputStream dos) throws IOException {
         Map<ContactType, String> contacts = r.getContacts();
-        dos.writeInt(contacts.size());
-        writeWithException(contacts.entrySet(), dos, new MapEntryWriter());
+        writeWithException(contacts.entrySet(), dos, entry -> {
+            dos.writeUTF(entry.getKey().name());
+            dos.writeUTF(entry.getValue());
+        });
     }
 
     private static void writeSections(Resume r, DataOutputStream dos) throws IOException {
         Map<SectionType, List<Section>> map = r.getSections();
-        dos.writeInt(map.size());
-        for (Map.Entry<SectionType, List<Section>> entry : map.entrySet()) {
+        writeWithException(map.entrySet(), dos, entry -> {
             SectionType type = entry.getKey();
             dos.writeUTF(type.name());
             List<Section> sections = entry.getValue();
-            dos.writeInt(sections.size());
-            for (Section section : sections) {
+            writeWithException(sections, dos, section -> {
                 switch (type) {
                     case PERSONAL, OBJECTIVE -> writeTextSection(section, dos);
                     case ACHIEVEMENT, QUALIFICATIONS -> writeListSection(section, dos);
                     case EXPERIENCE, EDUCATION -> writeCompanySection(section, dos);
                 }
-            }
-        }
+            });
+        });
     }
 
     private static void writeTextSection(Section section, DataOutputStream dos) throws IOException {
@@ -62,29 +62,34 @@ public class DataStreamSerializer implements StreamSerializer {
 
     private static void writeListSection(Section section, DataOutputStream dos) throws IOException {
         List<String> items = ((ListSection) section).getItems();
-        dos.writeInt(items.size());
-        writeWithException(items, dos, new StringWriter());
+        writeWithException(items, dos, dos::writeUTF);
     }
 
     private static void writeCompanySection(Section section, DataOutputStream dos) throws IOException {
-        String name = ((CompanySection) section).getName();
-        String website = ((CompanySection) section).getWebsite();
+        writeLink(((CompanySection) section).getName(), ((CompanySection) section).getWebsite(), dos);
+
+        List<Period> periods = ((CompanySection) section).getPeriods();
+        writeWithException(periods, dos, (period) -> {
+            dos.writeUTF(period.getStartDate().toString());
+            dos.writeUTF(period.getEndDate().toString());
+            dos.writeUTF(period.getPosition());
+            dos.writeUTF(period.getDescription());
+        });
+    }
+
+    private static void writeLink(String name, String website, DataOutputStream dos) throws IOException {
         if (name != null) {
             dos.writeBoolean(true);
-            dos.writeUTF(((CompanySection) section).getName());
+            dos.writeUTF(name);
         } else {
             dos.writeBoolean(false);
         }
         if (website != null) {
             dos.writeBoolean(true);
-            dos.writeUTF(((CompanySection) section).getWebsite());
+            dos.writeUTF(website);
         } else {
             dos.writeBoolean(false);
         }
-
-        List<Period> periods = ((CompanySection) section).getPeriods();
-        dos.writeInt(periods.size());
-        writeWithException(periods, dos, new PeriodWriter());
     }
 
     private static void readContacts(Resume resume, DataInputStream dis) throws IOException {
@@ -145,9 +150,10 @@ public class DataStreamSerializer implements StreamSerializer {
         return new CompanySection(name, website, periods);
     }
 
-    private static <T> void writeWithException(Collection<T> collection, DataOutputStream dos,  CustomConsumer<T,DataOutputStream> consumer) throws IOException {
+    private static <T> void writeWithException(Collection<T> collection, DataOutputStream dos, CustomConsumer<T> consumer) throws IOException {
+        dos.writeInt(collection.size());
         for (T obj : collection) {
-            consumer.write(obj, dos);
+            consumer.write(obj);
         }
     }
 }
