@@ -4,10 +4,7 @@ import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataStreamSerializer implements StreamSerializer {
     @Override
@@ -23,9 +20,7 @@ public class DataStreamSerializer implements StreamSerializer {
     @Override
     public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
-            String uuid = dis.readUTF();
-            String fullName = dis.readUTF();
-            Resume resume = new Resume(uuid, fullName);
+            Resume resume = new Resume(dis.readUTF(), dis.readUTF());
             readContacts(resume, dis);
             readSections(resume, dis);
             return resume;
@@ -93,26 +88,28 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private static void readContacts(Resume resume, DataInputStream dis) throws IOException {
-        int size = dis.readInt();
-        for (int i = 0; i < size; i++) {
+        readWithException(dis, () -> {
             resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-        }
+            // ???
+            return "";
+        });
     }
 
     private static void readSections(Resume resume, DataInputStream dis) throws IOException {
-        int sectionsMapSize = dis.readInt();
-        for (int i = 0; i < sectionsMapSize; i++) {
+        readWithException(dis, () -> {
             SectionType type = SectionType.valueOf(dis.readUTF());
-            int sectionsLiatSize = dis.readInt();
-            for (int j = 0; j < sectionsLiatSize; j++) {
+            readWithException(dis, () -> {
                 Section section = switch (type) {
                     case PERSONAL, OBJECTIVE -> readTextSection(dis);
                     case ACHIEVEMENT, QUALIFICATIONS -> readListSection(dis);
                     case EXPERIENCE, EDUCATION -> readCompanySection(dis);
                 };
                 resume.addSection(type, section);
-            }
-        }
+                return section;
+            });
+            // ???
+            return type;
+        });
     }
 
     private static Section readTextSection(DataInputStream dis) throws IOException {
@@ -120,34 +117,25 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private static Section readListSection(DataInputStream dis) throws IOException {
-        int size = dis.readInt();
-        List<String> items = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            items.add(dis.readUTF());
-        }
-        return new ListSection(items);
+        return new ListSection(new ArrayList<>(readWithException(dis, dis::readUTF)));
     }
 
     private static Section readCompanySection(DataInputStream dis) throws IOException {
-        String name = null;
-        String website = null;
+        String name = readString(dis);
+        String website = readString(dis);
 
-        if (dis.readBoolean()) {
-            name = dis.readUTF();
-        }
-        if (dis.readBoolean()) {
-            website = dis.readUTF();
-        }
-        int size = dis.readInt();
-        List<Period> periods = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
+        List<Period> periods = new ArrayList<>(readWithException(dis, () -> {
             LocalDate startDate = LocalDate.parse(dis.readUTF());
             LocalDate endDate = LocalDate.parse(dis.readUTF());
             String position = dis.readUTF();
             String description = dis.readUTF();
-            periods.add(new Period(startDate, endDate, position, description));
-        }
+            return new Period(startDate, endDate, position, description);
+        }));
         return new CompanySection(name, website, periods);
+    }
+
+    private static String readString(DataInputStream dis) throws IOException {
+        return dis.readBoolean() ? dis.readUTF() : null;
     }
 
     private static <T> void writeWithException(Collection<T> collection, DataOutputStream dos, CustomConsumer<T> consumer) throws IOException {
@@ -155,5 +143,14 @@ public class DataStreamSerializer implements StreamSerializer {
         for (T obj : collection) {
             consumer.write(obj);
         }
+    }
+
+    private static <T> Collection<T> readWithException(DataInputStream dis, CustomProducer<T> producer) throws IOException {
+        int size = dis.readInt();
+        Collection<T> collection = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            collection.add(producer.read());
+        }
+        return collection;
     }
 }
