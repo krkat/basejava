@@ -90,8 +90,6 @@ public class DataStreamSerializer implements StreamSerializer {
     private static void readContacts(Resume resume, DataInputStream dis) throws IOException {
         readWithException(dis, () -> {
             resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            // ???
-            return "";
         });
     }
 
@@ -107,8 +105,6 @@ public class DataStreamSerializer implements StreamSerializer {
                 resume.addSection(type, section);
                 return section;
             });
-            // ???
-            return type;
         });
     }
 
@@ -117,7 +113,7 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private static Section readListSection(DataInputStream dis) throws IOException {
-        return new ListSection(new ArrayList<>(readWithException(dis, dis::readUTF)));
+        return new ListSection(readWithException(dis, () -> dis.readUTF()));
     }
 
     private static Section readCompanySection(DataInputStream dis) throws IOException {
@@ -145,12 +141,19 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-    private static <T> Collection<T> readWithException(DataInputStream dis, CustomProducer<T> producer) throws IOException {
+    private static <T> List<T> readWithException(DataInputStream dis, CustomProducer<T> producer) throws IOException {
         int size = dis.readInt();
-        Collection<T> collection = new ArrayList<>();
+        List<T> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            collection.add(producer.read());
+            list.add(producer.read());
         }
-        return collection;
+        return list;
+    }
+
+    private static void readWithException(DataInputStream dis, CustomInterface customInterface) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            customInterface.read();
+        }
     }
 }
