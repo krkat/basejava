@@ -73,12 +73,7 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private static void writeLink(String name, String website, DataOutputStream dos) throws IOException {
-        if (name != null) {
-            dos.writeBoolean(true);
-            dos.writeUTF(name);
-        } else {
-            dos.writeBoolean(false);
-        }
+        dos.writeUTF(name);
         if (website != null) {
             dos.writeBoolean(true);
             dos.writeUTF(website);
@@ -117,7 +112,7 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private static Section readCompanySection(DataInputStream dis) throws IOException {
-        String name = readString(dis);
+        String name = dis.readUTF();
         String website = readString(dis);
 
         List<Period> periods = new ArrayList<>(readWithException(dis, () -> {
