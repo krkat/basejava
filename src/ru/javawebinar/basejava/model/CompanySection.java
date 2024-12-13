@@ -26,6 +26,10 @@ public class CompanySection extends Section{
         return homepage.getUrl();
     }
 
+    public Link getHomepage() {
+        return homepage;
+    }
+
     public List<Period> getPeriods() {
         return Collections.unmodifiableList(periods);
     }
