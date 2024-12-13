@@ -59,27 +59,6 @@ public class MainConcurrency {
             }
         });
         System.out.println(mainConcurrency.counter);
-
-        new Thread(() -> {
-            synchronized (LOCK) {
-                System.out.println(Thread.currentThread().getName() + " synchronized LOCK");
-                synchronized (LOCK_2) {
-                    System.out.println(Thread.currentThread().getName() + " synchronized LOCK2");
-                }
-            }
-        }).start();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (LOCK_2) {
-                    System.out.println(Thread.currentThread().getName() + " synchronized LOCK2");
-                    synchronized (LOCK) {
-                        System.out.println(Thread.currentThread().getName() + " synchronized LOCK");
-                    }
-                }
-            }
-        }).start();
     }
 
     private synchronized void inc() {
