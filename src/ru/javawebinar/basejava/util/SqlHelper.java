@@ -14,7 +14,7 @@ public class SqlHelper {
              PreparedStatement ps = conn.prepareStatement(statement)) {
             executor.execute(ps);
         } catch (SQLException e) {
-            if (e.getMessage().contains("duplicate key value violates unique constraint")) {
+            if ("23505". equals(e.getSQLState())) {
                 throw new ExistStorageException(e.getMessage());
             }
             throw new StorageException(e);
