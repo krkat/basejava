@@ -28,7 +28,9 @@ public class SqlStorage implements Storage {
         SqlHelper.execute(connectionFactory, "UPDATE resume r SET full_name=? WHERE r.uuid=?", ps -> {
             ps.setString(1, r.getFullName());
             ps.setString(2, r.getUuid());
-            ps.executeUpdate();
+            if (ps.executeUpdate() == 0) {
+                throw new NotExistStorageException("Resume " + r.getUuid() + " doesn't exist.");
+            }
         });
     }
 
@@ -37,7 +39,7 @@ public class SqlStorage implements Storage {
         SqlHelper.execute(connectionFactory, "INSERT INTO resume (uuid, full_name) VALUES (?,?)", ps -> {
             ps.setString(1, r.getUuid());
             ps.setString(2, r.getFullName());
-            ps.executeUpdate();
+            ps.execute();
         });
     }
 
@@ -69,7 +71,7 @@ public class SqlStorage implements Storage {
             ResultSet rs = ps.executeQuery();
             List<Resume> resumes = new ArrayList<>();
             while (rs.next()) {
-                resumes.add(new Resume(rs.getString("uuid").trim(), rs.getString("full_name")));
+                resumes.add(new Resume(rs.getString("uuid")/*.trim()*/, rs.getString("full_name")));
             }
             return resumes;
         });
