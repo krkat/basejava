@@ -3,6 +3,8 @@ package ru.javawebinar.basejava.storage;
 import org.junit.Before;
 import org.junit.Test;
 import ru.javawebinar.basejava.Config;
+import ru.javawebinar.basejava.ResumeInfo;
+import ru.javawebinar.basejava.ResumeTestData;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
@@ -41,6 +43,10 @@ public abstract class AbstractStorageTest {
         RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
         RESUME_4 = new Resume(UUID_4, FULL_NAME_4);
 
+        ResumeTestData.addContacts(RESUME_1);
+        ResumeTestData.addContacts(RESUME_2);
+        ResumeTestData.addContacts(RESUME_3);
+        ResumeTestData.addContacts(RESUME_4);
         /*RESUME_1 = ResumeTestData.createResume(UUID_1, FULL_NAME_1);
         RESUME_2 = ResumeTestData.createResume(UUID_2, FULL_NAME_2);
         RESUME_3 = ResumeTestData.createResume(UUID_3, FULL_NAME_3);
@@ -83,6 +89,7 @@ public abstract class AbstractStorageTest {
     public void update() throws Exception {
         // Resume newResume = ResumeTestData.createResume(UUID_1, "New name");
         Resume newResume = new Resume(UUID_1, "New name");
+        ResumeTestData.addContacts(newResume);
         storage.update(newResume);
         assertEquals(newResume, storage.get(UUID_1));
     }

@@ -14,7 +14,7 @@ public class ResumeTestData {
         resume.print();
     }
 
-    private static void addContacts(Resume resume) {
+    public static void addContacts(Resume resume) {
         resume.addContact(ContactType.PHONE, ResumeInfo.PHONE);
         resume.addContact(ContactType.SKYPE, ResumeInfo.SKYPE);
         resume.addContact(ContactType.EMAIL, ResumeInfo.EMAIL);
