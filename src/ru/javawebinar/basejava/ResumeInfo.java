@@ -1,8 +1,6 @@
 package ru.javawebinar.basejava;
 
-import ru.javawebinar.basejava.model.CompanySection;
-import ru.javawebinar.basejava.model.Period;
-import ru.javawebinar.basejava.model.Section;
+import ru.javawebinar.basejava.model.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -106,4 +104,54 @@ public class ResumeInfo {
     static final Section SIEMENS_EDU = new CompanySection("Siemens AG", "http://www.siemens.ru/", List.of(periodSiemensEdu));
     static final Section ALCATEL_EDU = new CompanySection("Alcatel", "http://www.alcatel.ru/", List.of(periodAlcatelEdu));
     static final Section UNIVERSITY = new CompanySection("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://www.ifmo.ru/", List.of(periodPostgraduate, periodStudent));
+
+    public static void addContacts(Resume resume) {
+        resume.addContact(ContactType.PHONE, ResumeInfo.PHONE);
+        resume.addContact(ContactType.SKYPE, ResumeInfo.SKYPE);
+        resume.addContact(ContactType.EMAIL, ResumeInfo.EMAIL);
+        resume.addContact(ContactType.LINKEDIN, ResumeInfo.LINKEDIN);
+        resume.addContact(ContactType.GITHUB, ResumeInfo.GITHUB);
+        resume.addContact(ContactType.STACKOVERFLOW, ResumeInfo.STACKOVERFLOW);
+        resume.addContact(ContactType.HOME_PAGE, ResumeInfo.HOME_PAGE);
+    }
+
+    public static void addTextSections(Resume resume) {
+        Section position = new TextSection(ResumeInfo.OBJECTIVE);
+        resume.addSection(SectionType.OBJECTIVE, position);
+        Section personal = new TextSection(ResumeInfo.PERSONAL);
+        resume.addSection(SectionType.PERSONAL, personal);
+    }
+
+    public static void addListSections(Resume resume) {
+        Section achievement = new ListSection(ResumeInfo.ACHIEVEMENTS);
+        resume.addSection(SectionType.ACHIEVEMENT, achievement);
+        Section qualification = new ListSection(ResumeInfo.QUALIFICATIONS);
+        resume.addSection(SectionType.QUALIFICATIONS, qualification);
+    }
+
+    public static void addCompanySections(Resume resume) {
+        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.JAVA_ONLINE_PROJECTS);
+        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.WRIKE);
+        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.RIT);
+        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.LUXOFT);
+        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.YOTA);
+        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.ENKATA);
+        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.SIEMENS_AG);
+        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.ALCATEL);
+
+        resume.addSection(SectionType.EDUCATION, ResumeInfo.COURSERA);
+        resume.addSection(SectionType.EDUCATION,ResumeInfo.LUXOFT_EDU);
+        resume.addSection(SectionType.EDUCATION,ResumeInfo.SIEMENS_EDU);
+        resume.addSection(SectionType.EDUCATION,ResumeInfo.ALCATEL_EDU);
+        resume.addSection(SectionType.EDUCATION,ResumeInfo.UNIVERSITY);
+    }
+
+    public static Resume createResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
+        addContacts(resume);
+        addTextSections(resume);
+        addListSections(resume);
+        addCompanySections(resume);
+        return resume;
+    }
 }
