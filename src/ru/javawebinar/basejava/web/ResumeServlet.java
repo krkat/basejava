@@ -18,6 +18,6 @@ public class ResumeServlet extends HttpServlet {
         // resp.setHeader("Content-Type", "text/html, charset=UTF-8");
         resp.setContentType("text/html; charset=UTF-8");
         String name = req.getParameter("name");
-        resp.getWriter().write(name == null ? "Hello Resumes!" : "Hellp " + name + "!");
+        resp.getWriter().write(name == null ? "Hello Resumes!" : "Hello " + name + "!");
     }
 }
