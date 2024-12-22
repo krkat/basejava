@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -30,23 +29,22 @@ public class ResumeServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html; charset=UTF-8");
-        List<Resume> resumes = storage.getAllSorted();
-        resp.getWriter().write("<head>Резюме</head>" +
+        StringBuilder builder = new StringBuilder("<head><title>Резюме</title></head>" +
                 "<body><table>\n" +
                 "    <thead>\n" +
                 "        <th>Uuid</th>\n" +
                 "        <th>FullName</th>\n" +
                 "    </thead>\n" +
-                "    <tbody>\n" +
-                "    <tr>\n" +
-                "        <td>" + resumes.get(1) + "</td>\n" +
-                "        <td>Name1</td>\n" +
-                "    </tr>\n" +
-                "    <tr>\n" +
-                "        <td>2</td>\n" +
-                "        <td>Name2</td>\n" +
-                "    </tr>\n" +
-                "    </tbody>\n" +
-                "</table></body>");
+                "    <tbody>\n");
+        for (Resume resume : storage.getAllSorted()) {
+            builder.append("    <tr>\n" +
+                    "        <td>" + resume.getUuid() + "</td>\n" +
+                    "        <td>" + resume.getFullName() + "</td>\n" +
+                    "    </tr>\n"
+            );
+        }
+        builder.append("</tbody>\n" +
+        "</table></body>");
+        resp.getWriter().write(builder.toString());
     }
 }
