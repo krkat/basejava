@@ -9,6 +9,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static ru.javawebinar.basejava.TestData.*;
 
 public class SqlStorageTest extends AbstractStorageTest {
     public SqlStorageTest() {
@@ -31,7 +32,7 @@ public class SqlStorageTest extends AbstractStorageTest {
 
     @Test
     public void updateDeleteContact() {
-        Resume newResume = new Resume(UUID_1, RESUME_1.getFullName());
+        Resume newResume = new Resume(UUID_1, R1.getFullName());
         ResumeInfo.addTextSections(newResume);
         ResumeInfo.addListSections(newResume);
         storage.update(newResume);
@@ -53,7 +54,7 @@ public class SqlStorageTest extends AbstractStorageTest {
 
     @Test
     public void updateDeleteTextSection() {
-        Resume newResume = new Resume(UUID_1, RESUME_1.getFullName());
+        Resume newResume = new Resume(UUID_1, R1.getFullName());
         ResumeInfo.addContacts(newResume);
         ResumeInfo.addTextSections(newResume);
         storage.update(newResume);
