@@ -18,6 +18,8 @@ public class SqlStorageTest extends AbstractStorageTest {
     @Test
     public void updateAddContact() {
         Resume resumeWithoutContacts = new Resume(UUID.randomUUID().toString(), "Name");
+        ResumeInfo.addTextSections(resumeWithoutContacts);
+        ResumeInfo.addListSections(resumeWithoutContacts);
         storage.save(resumeWithoutContacts);
         Resume updatedResume = new Resume(resumeWithoutContacts.getUuid(), resumeWithoutContacts.getFullName());
         updatedResume.addContact(ContactType.PHONE, "+71234567");
@@ -38,19 +40,21 @@ public class SqlStorageTest extends AbstractStorageTest {
 
     @Test
     public void updateAddSection() {
-        Resume resumeWithoutContacts = new Resume(UUID.randomUUID().toString(), "Name");
-        storage.save(resumeWithoutContacts);
-        Resume updatedResume = new Resume(resumeWithoutContacts.getUuid(), resumeWithoutContacts.getFullName());
-        updatedResume.addContact(ContactType.PHONE, "+71234567");
+        Resume resumeWithoutSections = new Resume(UUID.randomUUID().toString(), "Name");
+        ResumeInfo.addContacts(resumeWithoutSections);
+        storage.save(resumeWithoutSections);
+        Resume updatedResume = new Resume(resumeWithoutSections.getUuid(), resumeWithoutSections.getFullName());
+        ResumeInfo.addContacts(updatedResume);
         ResumeInfo.addTextSections(updatedResume);
         ResumeInfo.addListSections(updatedResume);
         storage.update(updatedResume);
-        assertEquals(updatedResume, storage.get(resumeWithoutContacts.getUuid()));
+        assertEquals(updatedResume, storage.get(resumeWithoutSections.getUuid()));
     }
 
     @Test
     public void updateDeleteTextSection() {
         Resume newResume = new Resume(UUID_1, RESUME_1.getFullName());
+        ResumeInfo.addContacts(newResume);
         ResumeInfo.addTextSections(newResume);
         storage.update(newResume);
         assertEquals(newResume, storage.get(UUID_1));
