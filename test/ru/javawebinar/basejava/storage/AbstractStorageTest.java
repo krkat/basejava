@@ -46,10 +46,16 @@ public abstract class AbstractStorageTest {
         ResumeInfo.addContacts(RESUME_2);
         ResumeInfo.addContacts(RESUME_3);
         ResumeInfo.addContacts(RESUME_4);
-        /*RESUME_1 = ResumeTestData.createResume(UUID_1, FULL_NAME_1);
-        RESUME_2 = ResumeTestData.createResume(UUID_2, FULL_NAME_2);
-        RESUME_3 = ResumeTestData.createResume(UUID_3, FULL_NAME_3);
-        RESUME_4 = ResumeTestData.createResume(UUID_4, FULL_NAME_4);*/
+
+        ResumeInfo.addTextSections(RESUME_1);
+        ResumeInfo.addTextSections(RESUME_2);
+        ResumeInfo.addTextSections(RESUME_3);
+        ResumeInfo.addTextSections(RESUME_4);
+
+        ResumeInfo.addListSections(RESUME_1);
+        ResumeInfo.addListSections(RESUME_2);
+        ResumeInfo.addListSections(RESUME_3);
+        ResumeInfo.addListSections(RESUME_4);
     }
 
     protected AbstractStorageTest(Storage storage) {
@@ -89,6 +95,8 @@ public abstract class AbstractStorageTest {
         // Resume newResume = ResumeTestData.createResume(UUID_1, "New name");
         Resume newResume = new Resume(UUID_1, "New name");
         ResumeInfo.addContacts(newResume);
+        ResumeInfo.addTextSections(newResume);
+        ResumeInfo.addListSections(newResume);
         storage.update(newResume);
         assertEquals(newResume, storage.get(UUID_1));
     }
