@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.*;
 
 public class SqlStorage implements Storage {
-    public final SqlHelper sqlHelper;
+    private final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         try {
