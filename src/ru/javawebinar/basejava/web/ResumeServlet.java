@@ -61,10 +61,8 @@ public class ResumeServlet extends HttpServlet {
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
-
-
         }
-        req.setAttribute("resumes", r);
+        req.setAttribute("resume", r);
         req.getRequestDispatcher(
                 "view".equals(action) ? "/WEB-INF/jsp/view.jsp" :
                         "/WEB-INF/jsp/edit.jsp").forward(req, resp);
