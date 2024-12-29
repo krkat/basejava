@@ -1,8 +1,7 @@
 package ru.javawebinar.basejava.web;
 
 import ru.javawebinar.basejava.Config;
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.Storage;
 
 import javax.servlet.ServletConfig;
@@ -11,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -34,6 +35,29 @@ public class ResumeServlet extends HttpServlet {
                 r.addContact(type, value);
             } else {
                 r.getContacts().remove(type);
+            }
+        }
+        for (SectionType type : SectionType.values()) {
+            String value = req.getParameter(type.name());
+            if (value != null && value.trim().length() != 0) {
+                Section section = null;
+                switch (type) {
+                    case PERSONAL, OBJECTIVE -> {
+                        section = new TextSection(value);
+                    }
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                        String[] items = value.split("\n");
+                        List<String> list = new ArrayList<>(List.of(items));
+                        section = new ListSection(list);
+                    }
+                    case EXPERIENCE, EDUCATION -> {}
+                }
+                if (section != null) {
+                    r.getSections().remove(type);
+                    r.addSection(type, section);
+                }
+            } else {
+                r.getSections().remove(type);
             }
         }
         storage.update(r);

@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS section;
+DROP TABLE IF EXISTS contact;
+DROP TABLE IF EXISTS resume;
 CREATE TABLE resume (
     uuid      CHAR(36) PRIMARY KEY NOT NULL,
     full_name TEXT                 NOT NULL
@@ -21,5 +24,5 @@ CREATE TABLE section
   value       TEXT NOT NULL
 );
 
-CREATE UNIQUE INDEX section_idx
+CREATE INDEX section_idx
     ON section (resume_uuid, type);

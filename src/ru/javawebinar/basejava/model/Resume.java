@@ -59,15 +59,43 @@ public class Resume implements Comparable<Resume>, Serializable {
     }
 
     public Map<ContactType, String> getContacts() {
-        return Collections.unmodifiableMap(contacts);
+        return contacts;
     }
 
     public Map<SectionType, List<Section>> getSections() {
-        return Collections.unmodifiableMap(sections);
+        return sections;
     }
 
     public void addContact(ContactType type, String contact) {
         contacts.put(type, contact);
+    }
+
+    public String getSection(SectionType type) {
+        List<Section> list = sections.get(type);
+        if (list != null) {
+            StringBuilder builder = new StringBuilder();
+            switch (type) {
+                case PERSONAL, OBJECTIVE -> {
+                    for (Section section : list) {
+                        builder.append(((TextSection) section).getContent());
+                    }
+                }
+                case ACHIEVEMENT, QUALIFICATIONS -> {
+                    for (Section section : list) {
+                        List<String> items = ((ListSection) section).getItems();
+                        for (String item : items) {
+                            builder.append(item).append("\n");
+                        }
+                    }
+                }
+                case EXPERIENCE, EDUCATION -> {
+                    builder.append("");
+                }
+                default -> builder.append("");
+            }
+            return builder.toString();
+        }
+        return "";
     }
 
     public void addSection(SectionType type, Section section) {
@@ -88,11 +116,11 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     public void print() {
         System.out.println(fullName);
-        for(Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
             System.out.print(entry.getKey().getTitle() + ": " + entry.getValue());
             System.out.println();
         }
-        for(Map.Entry<SectionType, List<Section>> entry : sections.entrySet()) {
+        for (Map.Entry<SectionType, List<Section>> entry : sections.entrySet()) {
             System.out.println(entry.getKey().getTitle() + "\n");
             entry.getValue().forEach(System.out::println);
             System.out.println();
@@ -116,7 +144,7 @@ public class Resume implements Comparable<Resume>, Serializable {
     @Override
     public String toString() {
         return uuid + '(' + fullName + ')' +
-        " contacts=" + contacts +
+                " contacts=" + contacts +
                 ", sections=" + sections;
     }
 
