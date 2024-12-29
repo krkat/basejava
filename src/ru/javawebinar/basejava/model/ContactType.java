@@ -1,18 +1,20 @@
 package ru.javawebinar.basejava.model;
 
+import ru.javawebinar.basejava.util.HtmlHelper;
+
 public enum ContactType {
     PHONE("Тел."),
     MOBILE("Мобильный"),
     SKYPE("Skype") {
         @Override
         public String toHtml0(String value) {
-            return getTitle() + ": " + toLink("skype:" + value, value);
+            return getTitle() + ": " + HtmlHelper.toLink("skype:" + value, value);
         }
     },
     EMAIL("Почта") {
         @Override
         public String toHtml0(String value) {
-            return getTitle() + ": " + toLink("mailTo:" + value, value);
+            return getTitle() + ": " + HtmlHelper.toLink("mailTo:" + value, value);
         }
     },
     LINKEDIN("Профиль LinkedIn") {
@@ -59,10 +61,6 @@ public enum ContactType {
     }
 
     public String toLink(String href) {
-        return toLink(href, title);
-    }
-
-    public static String toLink(String href, String title) {
-        return "<a href='" + href + "'>" + title + "</a>";
+        return HtmlHelper.toLink(href, title);
     }
 }

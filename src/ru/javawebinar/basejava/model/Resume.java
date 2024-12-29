@@ -73,8 +73,8 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     public String getSection(SectionType type) {
         List<Section> list = sections.get(type);
+        StringBuilder builder = new StringBuilder();
         if (list != null) {
-            StringBuilder builder = new StringBuilder();
             switch (type) {
                 case PERSONAL, OBJECTIVE -> {
                     for (Section section : list) {
@@ -94,9 +94,8 @@ public class Resume implements Comparable<Resume>, Serializable {
                 }
                 default -> builder.append("");
             }
-            return builder.toString();
         }
-        return "";
+        return builder.toString();
     }
 
     public void addSection(SectionType type, Section section) {

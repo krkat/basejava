@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.model;
 
+import ru.javawebinar.basejava.util.HtmlHelper;
+
 import java.util.List;
 
 public enum SectionType {
@@ -32,15 +34,14 @@ public enum SectionType {
                 List<String> items = ((ListSection) section).getItems();
                 builder.append("<ul>");
                 for (String item : items) {
-                    builder.append("<li>");
-                    builder.append(item).append("</li>");
+                    builder.append("<li>").append(item).append("</li>");
                 }
                 builder.append("</ul>");
             } else if (section instanceof CompanySection) {
                 String name = ((CompanySection) section).getName();
                 String website = ((CompanySection) section).getWebsite();
                 List<Period> periods = ((CompanySection) section).getPeriods();
-                builder.append(toLink(website, name)).append("<br>");
+                builder.append(HtmlHelper.toLink(website, name)).append("<br>");
                 for (Period period : periods) {
                     builder.append(period.getStartDate().toString()).append("-");
                     builder.append(period.getEndDate().toString()).append("<br>");
@@ -58,10 +59,6 @@ public enum SectionType {
     }
 
     public String toLink(String href) {
-        return toLink(href, title);
-    }
-
-    public static String toLink(String href, String title) {
-        return "<a href='" + href + "'>" + title + "</a>";
+        return HtmlHelper.toLink(href, title);
     }
 }
