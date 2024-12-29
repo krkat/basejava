@@ -27,40 +27,54 @@ public class ResumeServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String uuid = req.getParameter("uuid");
         String fullName = req.getParameter("fullName");
-        Resume r = storage.get(uuid);
-        r.setFullName(fullName);
-        for (ContactType type : ContactType.values()) {
-            String value = req.getParameter(type.name());
-            if (value != null && value.trim().length() != 0) {
-                r.addContact(type, value);
-            } else {
-                r.getContacts().remove(type);
-            }
-        }
-        for (SectionType type : SectionType.values()) {
-            String value = req.getParameter(type.name());
-            if (value != null && value.trim().length() != 0) {
-                Section section = null;
-                switch (type) {
-                    case PERSONAL, OBJECTIVE -> {
-                        section = new TextSection(value);
-                    }
-                    case ACHIEVEMENT, QUALIFICATIONS -> {
-                        String[] items = value.split("\n");
-                        List<String> list = new ArrayList<>(List.of(items));
-                        section = new ListSection(list);
-                    }
-                    case EXPERIENCE, EDUCATION -> {}
+        Resume r = uuid.isEmpty() ? new Resume("") : storage.get(uuid);
+        if (!fullName.trim().isEmpty()) {
+            r.setFullName(fullName);
+            for (ContactType type : ContactType.values()) {
+                String value = req.getParameter(type.name());
+                if (value != null && value.trim().length() != 0) {
+                    r.addContact(type, value.trim());
+                } else {
+                    r.getContacts().remove(type);
                 }
-                if (section != null) {
+            }
+            for (SectionType type : SectionType.values()) {
+                String value = req.getParameter(type.name());
+                if (value != null && value.trim().length() != 0) {
+                    Section section = null;
+                    switch (type) {
+                        case PERSONAL, OBJECTIVE -> {
+                            section = new TextSection(value);
+                        }
+                        case ACHIEVEMENT, QUALIFICATIONS -> {
+                            String[] items = value.split("\n");
+                            List<String> list = new ArrayList<>();
+                            for (String item : items) {
+                                if (!item.trim().isEmpty()) {
+                                    list.add(item.trim());
+                                }
+                            }
+                            if (!list.isEmpty()) {
+                                section = new ListSection(list);
+                            }
+                        }
+                        case EXPERIENCE, EDUCATION -> {
+                        }
+                    }
+                    if (section != null) {
+                        r.getSections().remove(type);
+                        r.addSection(type, section);
+                    }
+                } else {
                     r.getSections().remove(type);
-                    r.addSection(type, section);
                 }
+            }
+            if (uuid.isEmpty()) {
+                storage.save(r);
             } else {
-                r.getSections().remove(type);
+                storage.update(r);
             }
         }
-        storage.update(r);
         resp.sendRedirect("resume");
     }
 
@@ -82,6 +96,9 @@ public class ResumeServlet extends HttpServlet {
             case "view":
             case "edit":
                 r = storage.get(uuid);
+                break;
+            case "create":
+                r = new Resume();
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");

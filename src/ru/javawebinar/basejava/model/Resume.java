@@ -51,6 +51,7 @@ public class Resume implements Comparable<Resume>, Serializable {
     }
 
     public void setFullName(String fullName) {
+        Objects.requireNonNull(fullName, "FullName must not be null");
         this.fullName = fullName;
     }
 
