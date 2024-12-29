@@ -21,7 +21,10 @@ public enum SectionType {
     }
 
     protected String toHtml0(List<Section> value) {
-        StringBuilder builder = new StringBuilder("<br>").append(title).append("<br>");
+        StringBuilder builder = new StringBuilder("<section>")
+                .append("<h3>")
+                .append(title)
+                .append("</h3>");
         for (Section section : value) {
             if (section instanceof TextSection) {
                 builder.append(((TextSection) section).getContent());
@@ -46,6 +49,7 @@ public enum SectionType {
                 }
             }
         }
+        builder.append("</section>");
         return builder.toString();
     }
 

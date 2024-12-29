@@ -22,7 +22,7 @@
         <c:forEach var="contactType" items="<%=ContactType.values()%>">
             <dl>
                 <dt>${contactType.title}</dt>
-                <dd><input type="text" name="${contactType.name()}" size=30 value="${resume.getContact(contactType)}">
+                <dd><input type="text" name="${contactType.name()}" size=30 value="${resume.getContact(contactType).trim()}">
                 </dd>
             </dl>
         </c:forEach>

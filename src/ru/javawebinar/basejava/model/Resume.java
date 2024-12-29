@@ -78,14 +78,14 @@ public class Resume implements Comparable<Resume>, Serializable {
             switch (type) {
                 case PERSONAL, OBJECTIVE -> {
                     for (Section section : list) {
-                        builder.append(((TextSection) section).getContent());
+                        builder.append(((TextSection) section).getContent().trim());
                     }
                 }
                 case ACHIEVEMENT, QUALIFICATIONS -> {
                     for (Section section : list) {
                         List<String> items = ((ListSection) section).getItems();
                         for (String item : items) {
-                            builder.append(item).append("\n");
+                            builder.append(item.trim()).append("\n");
                         }
                     }
                 }
