@@ -26,56 +26,62 @@ public class ResumeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         String uuid = req.getParameter("uuid");
+        boolean isExistResume = !uuid.isEmpty();
         String fullName = req.getParameter("fullName");
-        Resume r = uuid.isEmpty() ? new Resume("") : storage.get(uuid);
-        if (!fullName.trim().isEmpty()) {
+        Resume r = isExistResume ? storage.get(uuid) : new Resume(fullName);
+        if (isExistResume) {
             r.setFullName(fullName);
-            for (ContactType type : ContactType.values()) {
-                String value = req.getParameter(type.name());
-                if (value != null && value.trim().length() != 0) {
-                    r.addContact(type, value.trim());
-                } else {
-                    r.getContacts().remove(type);
-                }
-            }
-            for (SectionType type : SectionType.values()) {
-                String value = req.getParameter(type.name());
-                if (value != null && value.trim().length() != 0) {
-                    Section section = null;
-                    switch (type) {
-                        case PERSONAL, OBJECTIVE -> {
-                            section = new TextSection(value);
-                        }
-                        case ACHIEVEMENT, QUALIFICATIONS -> {
-                            String[] items = value.split("\n");
-                            List<String> list = new ArrayList<>();
-                            for (String item : items) {
-                                if (!item.trim().isEmpty()) {
-                                    list.add(item.trim());
-                                }
-                            }
-                            if (!list.isEmpty()) {
-                                section = new ListSection(list);
-                            }
-                        }
-                        case EXPERIENCE, EDUCATION -> {
-                        }
-                    }
-                    if (section != null) {
-                        r.getSections().remove(type);
-                        r.addSection(type, section);
-                    }
-                } else {
-                    r.getSections().remove(type);
-                }
-            }
-            if (uuid.isEmpty()) {
-                storage.save(r);
+        }
+        for (ContactType type : ContactType.values()) {
+            String value = req.getParameter(type.name());
+            if (value != null && !value.trim().isEmpty()) {
+                r.addContact(type, value.trim());
             } else {
-                storage.update(r);
+                r.getContacts().remove(type);
             }
         }
+        for (SectionType type : SectionType.values()) {
+            String value = req.getParameter(type.name());
+            if (value != null && !value.trim().isEmpty()) {
+                Section section = getSection(type, value);
+                if (section != null) {
+                    r.getSections().remove(type);
+                    r.addSection(type, section);
+                }
+            } else {
+                r.getSections().remove(type);
+            }
+        }
+        if (!isExistResume) {
+            storage.save(r);
+        } else {
+            storage.update(r);
+        }
         resp.sendRedirect("resume");
+    }
+
+    private Section getSection(SectionType type, String value) {
+        switch (type) {
+            case PERSONAL, OBJECTIVE -> {
+                return new TextSection(value);
+            }
+            case ACHIEVEMENT, QUALIFICATIONS -> {
+                String[] items = value.split("\n");
+                List<String> list = new ArrayList<>();
+                for (String item : items) {
+                    if (!item.trim().isEmpty()) {
+                        list.add(item.trim());
+                    }
+                }
+                return !list.isEmpty() ? new ListSection(list) : null;
+            }
+            case EXPERIENCE, EDUCATION -> {
+                return null;
+            }
+            default -> {
+                return null;
+            }
+        }
     }
 
     @Override
@@ -89,19 +95,14 @@ public class ResumeServlet extends HttpServlet {
         }
         Resume r;
         switch (action) {
-            case "delete":
+            case "delete" -> {
                 storage.delete(uuid);
                 resp.sendRedirect("resume");
                 return;
-            case "view":
-            case "edit":
-                r = storage.get(uuid);
-                break;
-            case "create":
-                r = new Resume();
-                break;
-            default:
-                throw new IllegalArgumentException("Action " + action + " is illegal");
+            }
+            case "view", "edit" -> r = storage.get(uuid);
+            case "create" -> r = new Resume();
+            default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         req.setAttribute("resume", r);
         req.getRequestDispatcher(
