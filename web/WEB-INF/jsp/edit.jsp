@@ -22,26 +22,53 @@
         <c:forEach var="contactType" items="<%=ContactType.values()%>">
             <dl>
                 <dt>${contactType.title}</dt>
-                <dd><input type="text" name="${contactType.name()}" size=30 value="${resume.getContact(contactType).trim()}">
+                <dd><input type="text" name="${contactType.name()}" size=30
+                           value="${resume.getContact(contactType).trim()}">
                 </dd>
             </dl>
         </c:forEach>
-        <h3>Секции:</h3>
+
         <c:forEach var="sectionType" items="<%=SectionType.values()%>">
-            <dl>
-                <dt>${sectionType.title}</dt>
-                <c:choose>
-                    <c:when test="${sectionType.equals(SectionType.ACHIEVEMENT) || sectionType.equals(SectionType.QUALIFICATIONS)}">
-                        <dd>
+            <h3>${sectionType.title}</h3>
+            <c:choose>
+                <c:when test="${sectionType.equals(SectionType.PERSONAL) || sectionType.equals(SectionType.OBJECTIVE)}">
+                    <input type="text" name="${sectionType.name()}" size=30
+                           value="${resume.getSection(sectionType)}">
+                </c:when>
+                <c:when test="${sectionType.equals(SectionType.ACHIEVEMENT) || sectionType.equals(SectionType.QUALIFICATIONS)}">
                             <textarea id="listSection" name="${sectionType.name()}" rows="5"
-                                      cols="30">${resume.getSection(sectionType)}</textarea></dd>
-                    </c:when>
-                    <c:otherwise>
-                        <dd><input type="text" name="${sectionType.name()}" size=30
-                                   value="${resume.getSection(sectionType)}"></dd>
-                    </c:otherwise>
-                </c:choose>
-            </dl>
+                                      cols="30">${resume.getSection(sectionType)}</textarea>
+                </c:when>
+                <c:when test="${sectionType.equals(SectionType.EXPERIENCE) || sectionType.equals(SectionType.EDUCATION)}">
+                    <input class="field-label" type="text"
+                           placeholder="Название"
+                           name="${sectionType.name()}" size=100
+                           value>
+                    <input class="field-label" type="text"
+                           placeholder="Ссылка"
+                           name="${sectionType.name()}" size=100
+                           value>
+                    <div>
+                        <input class="field-label" type="text"
+                               placeholder="Начало, ММ/ГГГГ"
+                               name="${sectionType.name()}" size=10
+                               value>
+                        <input class="field-label" type="text"
+                               placeholder="Окончание, ММ/ГГГГ"
+                               name="${sectionType.name()}" size=10
+                               value>
+                    </div>
+                    <input class="field-label" type="text"
+                           placeholder="Заголовок"
+                           name="${sectionType.name()}" size=75
+                           value>
+                    <br>
+                    <textarea class="field-label"
+                              placeholder="Описание"
+                              name="${sectionType.name()}" rows="5"
+                              cols="30"></textarea>
+                </c:when>
+            </c:choose>
         </c:forEach>
         <hr>
         <button type="submit">Сохранить</button>
