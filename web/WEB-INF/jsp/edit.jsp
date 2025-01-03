@@ -1,6 +1,7 @@
 <%@ page import="ru.javawebinar.basejava.model.ContactType" %>
 <%@ page import="ru.javawebinar.basejava.model.SectionType" %>
 <%@ page import="ru.javawebinar.basejava.model.CompanySection" %>
+<%@ page import="ru.javawebinar.basejava.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -115,11 +116,11 @@
                             <input class="field-label" type="text"
                                    placeholder="Начало, ММ/ГГГГ"
                                    size=10
-                                   value="<%=period.getStartDate()%>">
+                                   value="<%=DateUtil.format(period.getStartDate())%>">
                             <input class="field-label" type="text"
                                    placeholder="Окончание, ММ/ГГГГ"
                                    size=10
-                                   value="<%=period.getEndDate()%>">
+                                   value="<%=DateUtil.format(period.getEndDate())%>">
                         </div>
                         <input class="field-label" type="text"
                                placeholder="Заголовок"
@@ -177,11 +178,11 @@
                             <input class="field-label" type="text"
                                    placeholder="Начало, ММ/ГГГГ"
                                    size=10
-                                   value="<%=periodE.getStartDate()%>">
+                                   value="<%=DateUtil.format(periodE.getStartDate())%>">
                             <input class="field-label" type="text"
                                    placeholder="Начало, ММ/ГГГГ"
                                    size=10
-                                   value="<%=periodE.getEndDate()%>">
+                                   value="<%=DateUtil.format(periodE.getEndDate())%>">
                         </div>
                         <input class="field-label" type="text"
                                placeholder="Заголовок"

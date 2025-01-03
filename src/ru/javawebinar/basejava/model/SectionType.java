@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.model;
 
+import ru.javawebinar.basejava.util.DateUtil;
 import ru.javawebinar.basejava.util.HtmlHelper;
 
 import java.util.List;
@@ -43,8 +44,8 @@ public enum SectionType {
                 List<Period> periods = ((CompanySection) section).getPeriods();
                 builder.append(HtmlHelper.toLink(website, name)).append("<br>");
                 for (Period period : periods) {
-                    builder.append(period.getStartDate().toString()).append("-");
-                    builder.append(period.getEndDate().toString()).append("<br>");
+                    builder.append(DateUtil.format(period.getStartDate())).append("-");
+                    builder.append(DateUtil.format(period.getEndDate())).append("<br>");
                     builder.append(period.getPosition()).append("<br>");
                     builder.append(period.getDescription()).append("<br>");
                 }
