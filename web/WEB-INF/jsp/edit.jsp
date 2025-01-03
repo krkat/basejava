@@ -1,5 +1,6 @@
 <%@ page import="ru.javawebinar.basejava.model.ContactType" %>
 <%@ page import="ru.javawebinar.basejava.model.SectionType" %>
+<%@ page import="ru.javawebinar.basejava.model.CompanySection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -42,11 +43,12 @@
                 <c:when test="${sectionType.equals(SectionType.EXPERIENCE) || sectionType.equals(SectionType.EDUCATION)}">
                     <input class="field-label" type="text"
                            placeholder="Название"
-                           name="${sectionType.name()}" size=100
+                           name="${sectionType.name()}" size=50
                            value>
+                    <br>
                     <input class="field-label" type="text"
                            placeholder="Ссылка"
-                           name="${sectionType.name()}" size=100
+                           name="${sectionType.name()}" size=50
                            value>
                     <div>
                         <input class="field-label" type="text"
@@ -60,17 +62,143 @@
                     </div>
                     <input class="field-label" type="text"
                            placeholder="Заголовок"
-                           name="${sectionType.name()}" size=75
+                           name="${sectionType.name()}" size=50
                            value>
                     <br>
                     <textarea class="field-label"
                               placeholder="Описание"
                               name="${sectionType.name()}" rows="5"
-                              cols="30"></textarea>
+                              cols="50"></textarea>
+                    <br>
                 </c:when>
             </c:choose>
         </c:forEach>
         <hr>
+
+        <c:choose>
+            <c:when test="<%=!resume.getSections().get(SectionType.EXPERIENCE).isEmpty()%>">
+                <h3>Опыт работы</h3>
+                <c:forEach var="section" items="<%=resume.getSections().get(SectionType.EXPERIENCE)%>">
+                    <jsp:useBean id="section" type="ru.javawebinar.basejava.model.Section" scope="page"/>
+                    <input class="field-label" type="text"
+                           placeholder="Название"
+                           size=50
+                           value="<%=((CompanySection)section).getName()%>">
+                    <br>
+                    <input class="field-label" type="text"
+                           placeholder="Ссылка"
+                           size=50
+                           value="<%=((CompanySection)section).getWebsite()%>">
+                    <div>
+                        <input class="field-label" type="text"
+                               placeholder="Начало, ММ/ГГГГ"
+                               size=10
+                               value>
+                        <input class="field-label" type="text"
+                               placeholder="Окончание, ММ/ГГГГ"
+                               size=10
+                               value>
+                    </div>
+                    <input class="field-label" type="text"
+                           placeholder="Заголовок"
+                           size=50
+                           value>
+                    <br>
+                    <textarea class="field-label"
+                              placeholder="Описание"
+                              rows="5"
+                              cols="50"></textarea>
+                    <br>
+                    <c:forEach var="period" items="<%=((CompanySection) section).getPeriods()%>">
+                        <jsp:useBean id="period" type="ru.javawebinar.basejava.model.Period" scope="page"/>
+                        <div>
+                            <input class="field-label" type="text"
+                                   placeholder="Начало, ММ/ГГГГ"
+                                   size=10
+                                   value="<%=period.getStartDate()%>">
+                            <input class="field-label" type="text"
+                                   placeholder="Окончание, ММ/ГГГГ"
+                                   size=10
+                                   value="<%=period.getEndDate()%>">
+                        </div>
+                        <input class="field-label" type="text"
+                               placeholder="Заголовок"
+                               size=50
+                               value<%=period.getPosition()%>>
+                        <br>
+                        <textarea class="field-label"
+                                  placeholder="Описание"
+                                  rows="5"
+                                  cols="50"><%=period.getDescription()%></textarea>
+                        <br>
+                        <hr>
+                    </c:forEach>
+                </c:forEach>
+            </c:when>
+            </c:choose>
+
+        <c:choose>
+            <c:when test="<%=!resume.getSections().get(SectionType.EDUCATION).isEmpty()%>">
+                <h3>Образование</h3>
+                <c:forEach var="sectionE" items="<%=resume.getSections().get(SectionType.EDUCATION)%>">
+                    <jsp:useBean id="sectionE" type="ru.javawebinar.basejava.model.Section" scope="page"/>
+                    <input class="field-label" type="text"
+                           placeholder="Название"
+                           size=50
+                           value="<%=((CompanySection)sectionE).getName()%>">
+                    <br>
+                    <input class="field-label" type="text"
+                           placeholder="Ссылка"
+                           size=50
+                           value="<%=((CompanySection)sectionE).getWebsite()%>">
+                    <div>
+                        <input class="field-label" type="text"
+                               placeholder="Начало, ММ/ГГГГ"
+                               size=10
+                               value>
+                        <input class="field-label" type="text"
+                               placeholder="Окончание, ММ/ГГГГ"
+                               size=10
+                               value>
+                    </div>
+                    <input class="field-label" type="text"
+                           placeholder="Заголовок"
+                           size=50
+                           value>
+                    <br>
+                    <textarea class="field-label"
+                              placeholder="Описание"
+                              rows="5"
+                              cols="50"></textarea>
+                    <br>
+                    <c:forEach var="periodE" items="<%=((CompanySection) sectionE).getPeriods()%>">
+                        <jsp:useBean id="periodE" type="ru.javawebinar.basejava.model.Period" scope="page"/>
+                        <div>
+                            <input class="field-label" type="text"
+                                   placeholder="Начало, ММ/ГГГГ"
+                                   size=10
+                                   value="<%=periodE.getStartDate()%>">
+                            <input class="field-label" type="text"
+                                   placeholder="Начало, ММ/ГГГГ"
+                                   size=10
+                                   value="<%=periodE.getEndDate()%>">
+                        </div>
+                        <input class="field-label" type="text"
+                               placeholder="Заголовок"
+                               size=50
+                               value<%=periodE.getPosition()%>>
+                        <br>
+                        <textarea class="field-label"
+                                  placeholder="Описание"
+                                  rows="5"
+                                  cols="50"><%=periodE.getDescription()%></textarea>
+                        <br>
+                        <hr>
+                    </c:forEach>
+                </c:forEach>
+            </c:when>
+        </c:choose>
+
         <button type="submit">Сохранить</button>
         <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
