@@ -3,6 +3,7 @@ package ru.javawebinar.basejava.web;
 import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.Storage;
+import ru.javawebinar.basejava.util.DateUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -10,8 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -41,15 +41,76 @@ public class ResumeServlet extends HttpServlet {
             }
         }
         for (SectionType type : SectionType.values()) {
-            String value = req.getParameter(type.name());
-            if (value != null && !value.trim().isEmpty()) {
-                Section section = getSection(type, value);
-                if (section != null) {
+            if (type != SectionType.EXPERIENCE && type != SectionType.EDUCATION) {
+                String value = req.getParameter(type.name());
+                if (value != null && !value.trim().isEmpty()) {
+                    Section section = getSection(type, value);
+                    if (section != null) {
+                        r.getSections().remove(type);
+                        //r.add.  Section(type, section);
+                    }
+                } else {
                     r.getSections().remove(type);
-                    r.addSection(type, section);
                 }
             } else {
-                r.getSections().remove(type);
+                String newSectionName = req.getParameter(type.name() + "0");
+                Section newSection = null;
+                if (newSectionName != null && !newSectionName.isEmpty()) {
+                    String url = req.getParameter(type.name() + "0url");
+                    String startDate = req.getParameter(type.name() + "0startDate");
+                    String endDate = req.getParameter(type.name() + "0endDate");
+                    String position = req.getParameter(type.name() + "0position");
+                    position = position == null ? "" : position;
+                    String description = req.getParameter(type.name() + "0description");
+                    description = description == null ? "" : description;
+                    if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+                        List<Period> newPeriods = new ArrayList<>();
+                        newPeriods.add(new Period(DateUtil.parse(startDate), DateUtil.parse(endDate), position, description));
+                        newSection = new CompanySection(newSectionName, url, newPeriods);
+                    }
+                }
+
+                String[] ijs = req.getParameterValues("ij" + type.name());
+
+                Map<String, Section> sections = new HashMap<>();
+                for (String ij : ijs) {
+                    String[] id = ij.split("\\.");
+                    String sectionName = req.getParameter(type.name() + id[0] + ".0");
+                    String url = req.getParameter(type.name() + id[0] + ".0url");
+                    if (sectionName != null && !sectionName.isEmpty()) {
+                        for (int i = 0; i <= Integer.parseInt(id[1]); i++) {
+                            String startDate = req.getParameter(type.name() + id[0] + "." + i + "startDate");
+                            String endDate = req.getParameter(type.name() + id[0] + "." + i + "endDate");
+                            String position = req.getParameter(type.name() + id[0] + "." + i + "position");
+                            position = position == null ? "" : position;
+                            String description = req.getParameter(type.name() + id[0] + "." + i + "description");
+                            description = description == null ? "" : description;
+                            if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+                                Period period = new Period(DateUtil.parse(startDate), DateUtil.parse(endDate), position, description);
+                                if (!sections.containsKey(sectionName)) {
+                                    List<Period> newPeriods = new ArrayList<>();
+                                    newPeriods.add(period);
+                                    Section section = new CompanySection(sectionName, url, newPeriods);
+                                    sections.put(sectionName, section);
+                                } else {
+                                    ((CompanySection) sections.get(sectionName)).getPeriods().add(period);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (newSection != null || !sections.isEmpty()) {
+                    r.getSections().remove(type);
+                    if (newSection != null) {
+                        r.addSection(type, newSection);
+                    }
+                    if (!sections.isEmpty()) {
+                        for (Section section : sections.values()) {
+                            r.addSection(type, section);
+                        }
+                    }
+                }
             }
         }
         if (!isExistResume) {

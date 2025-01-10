@@ -33,6 +33,7 @@
         <c:forEach var="sectionType" items="<%=SectionType.values()%>">
             <jsp:useBean id="sectionType" type="ru.javawebinar.basejava.model.SectionType" scope="page"/>
             <h3>${sectionType.title}</h3>
+            <% int i = 0;%>
             <c:choose>
                 <c:when test="${sectionType.equals(SectionType.PERSONAL) || sectionType.equals(SectionType.OBJECTIVE)}">
                     <input type="text" name="${sectionType.name()}" size=30
@@ -45,69 +46,93 @@
                 <c:when test="${sectionType.equals(SectionType.EXPERIENCE) || sectionType.equals(SectionType.EDUCATION)}">
                     <input class="field-label" type="text"
                            placeholder="Название"
-                           name="${sectionType.name()}" size=50
-                           value>
+                           name="${sectionType.name()}<%=i%>" size=50>
                     <br>
                     <input class="field-label" type="text"
                            placeholder="Ссылка"
-                           name="${sectionType.name()}" size=50
-                           value>
+                           name="${sectionType.name()}<%=i%>url" size=50>
                     <div>
                         <input class="field-label" type="text"
                                placeholder="Начало, ММ/ГГГГ"
-                               name="${sectionType.name()}" size=10
-                               value>
+                               name="${sectionType.name()}<%=i%>startDate" size=10>
                         <input class="field-label" type="text"
                                placeholder="Окончание, ММ/ГГГГ"
-                               name="${sectionType.name()}" size=10
-                               value>
+                               name="${sectionType.name()}<%=i%>endDate" size=10>
                     </div>
                     <input class="field-label" type="text"
                            placeholder="Заголовок"
-                           name="${sectionType.name()}" size=50
-                           value>
+                           name="${sectionType.name()}<%=i%>position" size=50>
                     <br>
                     <textarea class="field-label"
                               placeholder="Описание"
-                              name="${sectionType.name()}" rows="5"
+                              name="${sectionType.name()}<%=i%>description" rows="5"
                               cols="50"></textarea>
                     <br>
                     <hr>
                     <c:forEach var="section" items="<%=resume.getSections().get(sectionType)%>">
                         <jsp:useBean id="section" type="ru.javawebinar.basejava.model.Section" scope="page"/>
+                        <%i++;%>
+                        <% int j = 0;%>
                         <input class="field-label" type="text"
                                placeholder="Название"
+                               name="${sectionType.name()}<%=i%>.<%=j%>"
                                size=50
                                value="<%=((CompanySection)section).getName()%>">
                         <br>
                         <input class="field-label" type="text"
                                placeholder="Ссылка"
+                               name="${sectionType.name()}<%=i%>.<%=j%>url"
                                size=50
                                value="<%=((CompanySection)section).getWebsite()%>">
+                        <br>
+                        <div>
+                            <input class="field-label" type="text"
+                                   placeholder="Начало, ММ/ГГГГ"
+                                   name="${sectionType.name()}<%=i%>.<%=j%>startDate" size=10>
+                            <input class="field-label" type="text"
+                                   placeholder="Окончание, ММ/ГГГГ"
+                                   name="${sectionType.name()}<%=i%>.<%=j%>endDate" size=10>
+                        </div>
+                        <input class="field-label" type="text"
+                               placeholder="Заголовок"
+                               name="${sectionType.name()}<%=i%>.<%=j%>position" size=50>
+                        <br>
+                        <textarea class="field-label"
+                                  placeholder="Описание"
+                                  name="${sectionType.name()}<%=i%>.<%=j%>description" rows="5"
+                                  cols="50"></textarea>
+                        <br>
+                        <hr>
                         <c:forEach var="period" items="<%=((CompanySection) section).getPeriods()%>">
                             <jsp:useBean id="period" type="ru.javawebinar.basejava.model.Period" scope="page"/>
+                            <%j++;%>
                             <div>
                                 <input class="field-label" type="text"
                                        placeholder="Начало, ММ/ГГГГ"
+                                       name="${sectionType.name()}<%=i%>.<%=j%>startDate"
                                        size=10
                                        value="<%=DateUtil.format(period.getStartDate())%>">
                                 <input class="field-label" type="text"
                                        placeholder="Окончание, ММ/ГГГГ"
+                                       name="${sectionType.name()}<%=i%>.<%=j%>endDate"
                                        size=10
                                        value="<%=DateUtil.format(period.getEndDate())%>">
                             </div>
                             <input class="field-label" type="text"
                                    placeholder="Заголовок"
+                                   name="${sectionType.name()}<%=i%>.<%=j%>position"
                                    size=50
                                    value<%=period.getPosition()%>>
                             <br>
                             <textarea class="field-label"
                                       placeholder="Описание"
+                                      name="${sectionType.name()}<%=i%>.<%=j%>description"
                                       rows="5"
                                       cols="50"><%=period.getDescription()%></textarea>
                             <br>
                             <hr>
                         </c:forEach>
+                        <input type="hidden" name="ij${sectionType.name()}" value="<%=i%>.<%=j%>">
                     </c:forEach>
                 </c:when>
             </c:choose>
