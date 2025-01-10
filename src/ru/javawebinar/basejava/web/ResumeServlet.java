@@ -63,22 +63,22 @@ public class ResumeServlet extends HttpServlet {
                 }
 
                 String[] ijs = req.getParameterValues("ij" + type.name());
-                for (String ij : ijs) {
-                    String[] id = ij.split("\\.");
-                    String sectionName = req.getParameter(type.name() + id[0] + ".0");
-                    String url = req.getParameter(type.name() + id[0] + ".0url");
-                    if (!HtmlHelper.isEmpty(sectionName)) {
-                        for (int i = 0; i <= Integer.parseInt(id[1]); i++) {
-                            addSection(req, type, sections, id[0] + "." + i, sectionName, url);
+                if (ijs != null) {
+                    for (String ij : ijs) {
+                        String[] id = ij.split("\\.");
+                        String sectionName = req.getParameter(type.name() + id[0] + ".0");
+                        String url = req.getParameter(type.name() + id[0] + ".0url");
+                        if (!HtmlHelper.isEmpty(sectionName)) {
+                            for (int i = 0; i <= Integer.parseInt(id[1]); i++) {
+                                addSection(req, type, sections, id[0] + "." + i, sectionName, url);
+                            }
                         }
                     }
                 }
 
-                if (!sections.isEmpty()) {
-                    r.getSections().remove(type);
-                    for (Section section : sections.values()) {
-                        r.addSection(type, section);
-                    }
+                r.getSections().remove(type);
+                for (Section section : sections.values()) {
+                    r.addSection(type, section);
                 }
             }
         }
