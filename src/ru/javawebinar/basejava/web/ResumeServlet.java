@@ -4,6 +4,7 @@ import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.Storage;
 import ru.javawebinar.basejava.util.DateUtil;
+import ru.javawebinar.basejava.util.HtmlHelper;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -47,68 +48,36 @@ public class ResumeServlet extends HttpServlet {
                     Section section = getSection(type, value);
                     if (section != null) {
                         r.getSections().remove(type);
-                        //r.add.  Section(type, section);
+                        r.addSection(type, section);
                     }
                 } else {
                     r.getSections().remove(type);
                 }
             } else {
+                Map<String, Section> sections = new HashMap<>();
+
                 String newSectionName = req.getParameter(type.name() + "0");
-                Section newSection = null;
-                if (newSectionName != null && !newSectionName.isEmpty()) {
-                    String url = req.getParameter(type.name() + "0url");
-                    String startDate = req.getParameter(type.name() + "0startDate");
-                    String endDate = req.getParameter(type.name() + "0endDate");
-                    String position = req.getParameter(type.name() + "0position");
-                    position = position == null ? "" : position;
-                    String description = req.getParameter(type.name() + "0description");
-                    description = description == null ? "" : description;
-                    if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
-                        List<Period> newPeriods = new ArrayList<>();
-                        newPeriods.add(new Period(DateUtil.parse(startDate), DateUtil.parse(endDate), position, description));
-                        newSection = new CompanySection(newSectionName, url, newPeriods);
-                    }
+                String newUrl = req.getParameter(type.name() + "0url");
+                if (!HtmlHelper.isEmpty(newSectionName)) {
+                    addSection(req, type, sections, "0", newSectionName, newUrl);
                 }
 
                 String[] ijs = req.getParameterValues("ij" + type.name());
-
-                Map<String, Section> sections = new HashMap<>();
                 for (String ij : ijs) {
                     String[] id = ij.split("\\.");
                     String sectionName = req.getParameter(type.name() + id[0] + ".0");
                     String url = req.getParameter(type.name() + id[0] + ".0url");
-                    if (sectionName != null && !sectionName.isEmpty()) {
+                    if (!HtmlHelper.isEmpty(sectionName)) {
                         for (int i = 0; i <= Integer.parseInt(id[1]); i++) {
-                            String startDate = req.getParameter(type.name() + id[0] + "." + i + "startDate");
-                            String endDate = req.getParameter(type.name() + id[0] + "." + i + "endDate");
-                            String position = req.getParameter(type.name() + id[0] + "." + i + "position");
-                            position = position == null ? "" : position;
-                            String description = req.getParameter(type.name() + id[0] + "." + i + "description");
-                            description = description == null ? "" : description;
-                            if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
-                                Period period = new Period(DateUtil.parse(startDate), DateUtil.parse(endDate), position, description);
-                                if (!sections.containsKey(sectionName)) {
-                                    List<Period> newPeriods = new ArrayList<>();
-                                    newPeriods.add(period);
-                                    Section section = new CompanySection(sectionName, url, newPeriods);
-                                    sections.put(sectionName, section);
-                                } else {
-                                    ((CompanySection) sections.get(sectionName)).getPeriods().add(period);
-                                }
-                            }
+                            addSection(req, type, sections, id[0] + "." + i, sectionName, url);
                         }
                     }
                 }
 
-                if (newSection != null || !sections.isEmpty()) {
+                if (!sections.isEmpty()) {
                     r.getSections().remove(type);
-                    if (newSection != null) {
-                        r.addSection(type, newSection);
-                    }
-                    if (!sections.isEmpty()) {
-                        for (Section section : sections.values()) {
-                            r.addSection(type, section);
-                        }
+                    for (Section section : sections.values()) {
+                        r.addSection(type, section);
                     }
                 }
             }
@@ -119,6 +88,26 @@ public class ResumeServlet extends HttpServlet {
             storage.update(r);
         }
         resp.sendRedirect("resume");
+    }
+
+    private void addSection(HttpServletRequest req, SectionType type, Map<String, Section> sections, String index, String sectionName, String url) {
+        String startDate = req.getParameter(type.name() + index + "startDate");
+        String endDate = req.getParameter(type.name() + index + "endDate");
+        String position = req.getParameter(type.name() + index + "position");
+        position = position == null ? "" : position;
+        String description = req.getParameter(type.name() + index + "description");
+        description = description == null ? "" : description;
+        if (!HtmlHelper.isEmpty(startDate) && !HtmlHelper.isEmpty(endDate)) {
+            Period period = new Period(DateUtil.parse(startDate), DateUtil.parse(endDate), position, description);
+            if (!sections.containsKey(sectionName)) {
+                List<Period> periods = new ArrayList<>();
+                periods.add(period);
+                Section section = new CompanySection(sectionName, url, periods);
+                sections.put(sectionName, section);
+            } else {
+                ((CompanySection) sections.get(sectionName)).getPeriods().add(period);
+            }
+        }
     }
 
     private Section getSection(SectionType type, String value) {
@@ -135,9 +124,6 @@ public class ResumeServlet extends HttpServlet {
                     }
                 }
                 return !list.isEmpty() ? new ListSection(list) : null;
-            }
-            case EXPERIENCE, EDUCATION -> {
-                return null;
             }
             default -> {
                 return null;

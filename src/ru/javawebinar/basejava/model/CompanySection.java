@@ -31,7 +31,7 @@ public class CompanySection extends Section{
     }
 
     public List<Period> getPeriods() {
-        return Collections.unmodifiableList(periods);
+        return periods;
     }
 
     @Override
