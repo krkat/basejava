@@ -46,9 +46,14 @@ public enum SectionType {
                 for (Period period : periods) {
                     builder.append(DateUtil.format(period.getStartDate())).append("-");
                     builder.append(DateUtil.format(period.getEndDate())).append("<br>");
-                    builder.append(period.getPosition()).append("<br>");
-                    builder.append(period.getDescription()).append("<br>");
+                    if (!HtmlHelper.isEmpty(period.getPosition())) {
+                        builder.append(period.getPosition()).append("<br>");
+                    }
+                    if (!HtmlHelper.isEmpty(period.getDescription())) {
+                        builder.append(period.getDescription()).append("<br>");
+                    }
                 }
+                builder.append("<br>");
             }
         }
         builder.append("</section>");
