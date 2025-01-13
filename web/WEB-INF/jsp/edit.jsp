@@ -122,7 +122,7 @@
                                    placeholder="Заголовок"
                                    name="${sectionType.name()}<%=i%>.<%=j%>position"
                                    size=50
-                                   value<%=period.getPosition()%>>
+                                   value="<%=period.getPosition()%>">
                             <br>
                             <textarea class="field-label"
                                       placeholder="Описание"
