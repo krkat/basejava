@@ -36,7 +36,7 @@ public class ResumeServlet extends HttpServlet {
         for (ContactType type : ContactType.values()) {
             String value = req.getParameter(type.name());
             if (value != null && !value.trim().isEmpty()) {
-                r.addContact(type, value.trim());
+                r.setContact(type, value.trim());
             } else {
                 r.getContacts().remove(type);
             }
@@ -48,7 +48,7 @@ public class ResumeServlet extends HttpServlet {
                     Section section = getSection(type, value);
                     if (section != null) {
                         r.getSections().remove(type);
-                        r.addSection(type, section);
+                        r.setSection(type, section);
                     }
                 } else {
                     r.getSections().remove(type);
@@ -78,7 +78,7 @@ public class ResumeServlet extends HttpServlet {
 
                 r.getSections().remove(type);
                 for (Section section : sections.values()) {
-                    r.addSection(type, section);
+                    r.setSection(type, section);
                 }
             }
         }

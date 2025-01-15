@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
  */
 public class DateUtil {
 
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/yyyy");
+
     public static final LocalDate NOW = LocalDate.of(3000, 1, 1);
 
     public static LocalDate of(int year, Month month) {
@@ -19,7 +21,7 @@ public class DateUtil {
 
     public static String format(LocalDate date) {
         if (date == null) return "";
-        return date.equals(NOW) ? "н.в." : date.format(DateTimeFormatter.ofPattern("MM/yyyy"));
+        return date.equals(NOW) ? "н.в." : date.format(DATE_FORMATTER);
     }
 
     public static LocalDate parse(String date) {

@@ -84,7 +84,7 @@ public class DataStreamSerializer implements StreamSerializer {
 
     private static void readContacts(Resume resume, DataInputStream dis) throws IOException {
         processItems(dis, () -> {
-            resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
+            resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
         });
     }
 
@@ -97,7 +97,7 @@ public class DataStreamSerializer implements StreamSerializer {
                     case ACHIEVEMENT, QUALIFICATIONS -> readListSection(dis);
                     case EXPERIENCE, EDUCATION -> readCompanySection(dis);
                 };
-                resume.addSection(type, section);
+                resume.setSection(type, section);
                 return section;
             });
         });

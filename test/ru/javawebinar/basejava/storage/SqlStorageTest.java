@@ -23,7 +23,7 @@ public class SqlStorageTest extends AbstractStorageTest {
         ResumeInfo.addListSections(resumeWithoutContacts);
         storage.save(resumeWithoutContacts);
         Resume updatedResume = new Resume(resumeWithoutContacts.getUuid(), resumeWithoutContacts.getFullName());
-        updatedResume.addContact(ContactType.PHONE, "+71234567");
+        updatedResume.setContact(ContactType.PHONE, "+71234567");
         ResumeInfo.addTextSections(updatedResume);
         ResumeInfo.addListSections(updatedResume);
         storage.update(updatedResume);

@@ -106,44 +106,44 @@ public class ResumeInfo {
     static final Section UNIVERSITY = new CompanySection("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://www.ifmo.ru/", List.of(periodPostgraduate, periodStudent));
 
     public static void addContacts(Resume resume) {
-        resume.addContact(ContactType.PHONE, ResumeInfo.PHONE);
-        resume.addContact(ContactType.SKYPE, ResumeInfo.SKYPE);
-        resume.addContact(ContactType.EMAIL, ResumeInfo.EMAIL);
-        resume.addContact(ContactType.LINKEDIN, ResumeInfo.LINKEDIN);
-        resume.addContact(ContactType.GITHUB, ResumeInfo.GITHUB);
-        resume.addContact(ContactType.STACKOVERFLOW, ResumeInfo.STACKOVERFLOW);
-        resume.addContact(ContactType.HOME_PAGE, ResumeInfo.HOME_PAGE);
+        resume.setContact(ContactType.PHONE, ResumeInfo.PHONE);
+        resume.setContact(ContactType.SKYPE, ResumeInfo.SKYPE);
+        resume.setContact(ContactType.EMAIL, ResumeInfo.EMAIL);
+        resume.setContact(ContactType.LINKEDIN, ResumeInfo.LINKEDIN);
+        resume.setContact(ContactType.GITHUB, ResumeInfo.GITHUB);
+        resume.setContact(ContactType.STACKOVERFLOW, ResumeInfo.STACKOVERFLOW);
+        resume.setContact(ContactType.HOME_PAGE, ResumeInfo.HOME_PAGE);
     }
 
     public static void addTextSections(Resume resume) {
         Section position = new TextSection(ResumeInfo.OBJECTIVE);
-        resume.addSection(SectionType.OBJECTIVE, position);
+        resume.setSection(SectionType.OBJECTIVE, position);
         Section personal = new TextSection(ResumeInfo.PERSONAL);
-        resume.addSection(SectionType.PERSONAL, personal);
+        resume.setSection(SectionType.PERSONAL, personal);
     }
 
     public static void addListSections(Resume resume) {
         Section achievement = new ListSection(ResumeInfo.ACHIEVEMENTS);
-        resume.addSection(SectionType.ACHIEVEMENT, achievement);
+        resume.setSection(SectionType.ACHIEVEMENT, achievement);
         Section qualification = new ListSection(ResumeInfo.QUALIFICATIONS);
-        resume.addSection(SectionType.QUALIFICATIONS, qualification);
+        resume.setSection(SectionType.QUALIFICATIONS, qualification);
     }
 
     public static void addCompanySections(Resume resume) {
-        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.JAVA_ONLINE_PROJECTS);
-        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.WRIKE);
-        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.RIT);
-        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.LUXOFT);
-        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.YOTA);
-        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.ENKATA);
-        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.SIEMENS_AG);
-        resume.addSection(SectionType.EXPERIENCE, ResumeInfo.ALCATEL);
+        resume.setSection(SectionType.EXPERIENCE, ResumeInfo.JAVA_ONLINE_PROJECTS);
+        resume.setSection(SectionType.EXPERIENCE, ResumeInfo.WRIKE);
+        resume.setSection(SectionType.EXPERIENCE, ResumeInfo.RIT);
+        resume.setSection(SectionType.EXPERIENCE, ResumeInfo.LUXOFT);
+        resume.setSection(SectionType.EXPERIENCE, ResumeInfo.YOTA);
+        resume.setSection(SectionType.EXPERIENCE, ResumeInfo.ENKATA);
+        resume.setSection(SectionType.EXPERIENCE, ResumeInfo.SIEMENS_AG);
+        resume.setSection(SectionType.EXPERIENCE, ResumeInfo.ALCATEL);
 
-        resume.addSection(SectionType.EDUCATION, ResumeInfo.COURSERA);
-        resume.addSection(SectionType.EDUCATION,ResumeInfo.LUXOFT_EDU);
-        resume.addSection(SectionType.EDUCATION,ResumeInfo.SIEMENS_EDU);
-        resume.addSection(SectionType.EDUCATION,ResumeInfo.ALCATEL_EDU);
-        resume.addSection(SectionType.EDUCATION,ResumeInfo.UNIVERSITY);
+        resume.setSection(SectionType.EDUCATION, ResumeInfo.COURSERA);
+        resume.setSection(SectionType.EDUCATION,ResumeInfo.LUXOFT_EDU);
+        resume.setSection(SectionType.EDUCATION,ResumeInfo.SIEMENS_EDU);
+        resume.setSection(SectionType.EDUCATION,ResumeInfo.ALCATEL_EDU);
+        resume.setSection(SectionType.EDUCATION,ResumeInfo.UNIVERSITY);
     }
 
     public static Resume createResume(String uuid, String fullName) {
