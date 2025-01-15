@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -8,6 +9,14 @@ public class CompanySection extends Section{
     private static final long serialVersionUID = 1L;
     private Link homepage;
     private List<Period> periods;
+
+    public static final CompanySection EMPTY;
+
+    static {
+        List<Period> emptyPeriods = new ArrayList<>();
+        emptyPeriods.add(Period.EMPTY);
+        EMPTY = new CompanySection("", "", emptyPeriods);
+    }
 
     public CompanySection() {
     }

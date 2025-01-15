@@ -21,7 +21,14 @@ public class Period implements Serializable {
     private String position;
     private String description;
 
+    public static final Period EMPTY = new Period("", "");
+
     public Period() {
+    }
+
+    public Period(String position, String description) {
+        this.position = position;
+        this.description = description;
     }
 
     public Period(LocalDate startDate, LocalDate endDate, String position, String description) {

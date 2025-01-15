@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -54,30 +56,34 @@ public class ResumeServlet extends HttpServlet {
                     r.getSections().remove(type);
                 }
             } else {
-                Map<String, Section> sections = new HashMap<>();
+                String[] values = req.getParameterValues(type.name());
+                List<Section> sections = new ArrayList<>();
+                String[] urls = req.getParameterValues(type.name() + "url");
+                for (int i = 0; i < values.length; i++) {
+                    String name = values[i];
+                    List<Period> periods = new ArrayList<>();
+                    if (!HtmlHelper.isEmpty(name)) {
+                        String pfx = type.name() + i;
+                        String[] startDates = req.getParameterValues(pfx + "startDate");
+                        String[] endDates = req.getParameterValues(pfx + "endDate");
+                        String[] positions = req.getParameterValues(pfx + "position");
+                        String[] descriptions = req.getParameterValues(pfx + "description");
 
-                String newSectionName = req.getParameter(type.name() + "0");
-                String newUrl = req.getParameter(type.name() + "0url");
-                if (!HtmlHelper.isEmpty(newSectionName)) {
-                    addSection(req, type, sections, "0", newSectionName, newUrl);
-                }
-
-                String[] ijs = req.getParameterValues("ij" + type.name());
-                if (ijs != null) {
-                    for (String ij : ijs) {
-                        String[] id = ij.split("\\.");
-                        String sectionName = req.getParameter(type.name() + id[0] + ".0");
-                        String url = req.getParameter(type.name() + id[0] + ".0url");
-                        if (!HtmlHelper.isEmpty(sectionName)) {
-                            for (int i = 0; i <= Integer.parseInt(id[1]); i++) {
-                                addSection(req, type, sections, id[0] + "." + i, sectionName, url);
+                        for (int j = 0; j < positions.length; j++) {
+                            if (!HtmlHelper.isEmpty(positions[j])) {
+                                periods.add(new Period(
+                                        DateUtil.parse(startDates[j]),
+                                        DateUtil.parse(endDates[j]),
+                                        positions[j],
+                                        descriptions[j]
+                                ));
                             }
                         }
                     }
+                    sections.add(new CompanySection(name, urls[i], periods));
                 }
-
                 r.getSections().remove(type);
-                for (Section section : sections.values()) {
+                for (Section section : sections) {
                     r.setSection(type, section);
                 }
             }
@@ -147,7 +153,30 @@ public class ResumeServlet extends HttpServlet {
                 resp.sendRedirect("resume");
                 return;
             }
-            case "view", "edit" -> r = storage.get(uuid);
+            case "view" -> r = storage.get(uuid);
+            case "edit" -> {
+                r = storage.get(uuid);
+                for (SectionType type : new SectionType[]{SectionType.EXPERIENCE, SectionType.EDUCATION}) {
+                    List<Section> sections = r.getSections().get(type);
+                    List<Section> emptyFirstCompanies = new ArrayList<>();
+                    emptyFirstCompanies.add(CompanySection.EMPTY);
+                    if (sections != null) {
+                        for (Section section : sections) {
+                            List<Period> emptyFirstPeriods = new ArrayList<>();
+                            emptyFirstPeriods.add(Period.EMPTY);
+                            emptyFirstPeriods.addAll(((CompanySection) section).getPeriods());
+
+                            String name = ((CompanySection) section).getName();
+                            String website = ((CompanySection) section).getWebsite();
+                            emptyFirstCompanies.add(new CompanySection(name, website, emptyFirstPeriods));
+                        }
+                    }
+                    r.getSections().remove(type);
+                    for (Section section : emptyFirstCompanies) {
+                        r.setSection(type, section);
+                    }
+                }
+            }
             case "create" -> r = new Resume();
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
