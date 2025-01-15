@@ -29,10 +29,10 @@ public class ResumeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         String uuid = req.getParameter("uuid");
-        boolean isExistResume = !uuid.isEmpty();
+        boolean isCreate = (uuid == null || uuid.length() == 0);
         String fullName = req.getParameter("fullName");
-        Resume r = isExistResume ? storage.get(uuid) : new Resume(fullName);
-        if (isExistResume) {
+        Resume r = isCreate ? new Resume(fullName) : storage.get(uuid);
+        if (!isCreate) {
             r.setFullName(fullName);
         }
         for (ContactType type : ContactType.values()) {
@@ -56,13 +56,13 @@ public class ResumeServlet extends HttpServlet {
                     r.getSections().remove(type);
                 }
             } else {
-                String[] values = req.getParameterValues(type.name());
+                String[] names = req.getParameterValues(type.name());
                 List<Section> sections = new ArrayList<>();
                 String[] urls = req.getParameterValues(type.name() + "url");
-                for (int i = 0; i < values.length; i++) {
-                    String name = values[i];
-                    List<Period> periods = new ArrayList<>();
+                for (int i = 0; i < names.length; i++) {
+                    String name = names[i];
                     if (!HtmlHelper.isEmpty(name)) {
+                        List<Period> periods = new ArrayList<>();
                         String pfx = type.name() + i;
                         String[] startDates = req.getParameterValues(pfx + "startDate");
                         String[] endDates = req.getParameterValues(pfx + "endDate");
@@ -79,8 +79,8 @@ public class ResumeServlet extends HttpServlet {
                                 ));
                             }
                         }
+                        sections.add(new CompanySection(name, urls[i], periods));
                     }
-                    sections.add(new CompanySection(name, urls[i], periods));
                 }
                 r.getSections().remove(type);
                 for (Section section : sections) {
@@ -88,7 +88,7 @@ public class ResumeServlet extends HttpServlet {
                 }
             }
         }
-        if (!isExistResume) {
+        if (isCreate) {
             storage.save(r);
         } else {
             storage.update(r);
@@ -177,7 +177,7 @@ public class ResumeServlet extends HttpServlet {
                     }
                 }
             }
-            case "create" -> r = new Resume();
+            case "create" -> r = Resume.EMPTY;
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         req.setAttribute("resume", r);
