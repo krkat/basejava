@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -37,55 +36,16 @@ public class ResumeServlet extends HttpServlet {
         }
         for (ContactType type : ContactType.values()) {
             String value = req.getParameter(type.name());
-            if (value != null && !value.trim().isEmpty()) {
+            if (!HtmlHelper.isEmpty(value)) {
                 r.setContact(type, value.trim());
             } else {
                 r.getContacts().remove(type);
             }
         }
         for (SectionType type : SectionType.values()) {
-            if (type != SectionType.EXPERIENCE && type != SectionType.EDUCATION) {
-                String value = req.getParameter(type.name());
-                if (value != null && !value.trim().isEmpty()) {
-                    Section section = getSection(type, value);
-                    if (section != null) {
-                        r.getSections().remove(type);
-                        r.setSection(type, section);
-                    }
-                } else {
-                    r.getSections().remove(type);
-                }
-            } else {
-                String[] names = req.getParameterValues(type.name());
-                List<Section> sections = new ArrayList<>();
-                String[] urls = req.getParameterValues(type.name() + "url");
-                for (int i = 0; i < names.length; i++) {
-                    String name = names[i];
-                    if (!HtmlHelper.isEmpty(name)) {
-                        List<Period> periods = new ArrayList<>();
-                        String pfx = type.name() + i;
-                        String[] startDates = req.getParameterValues(pfx + "startDate");
-                        String[] endDates = req.getParameterValues(pfx + "endDate");
-                        String[] positions = req.getParameterValues(pfx + "position");
-                        String[] descriptions = req.getParameterValues(pfx + "description");
-
-                        for (int j = 0; j < positions.length; j++) {
-                            if (!HtmlHelper.isEmpty(positions[j])) {
-                                periods.add(new Period(
-                                        DateUtil.parse(startDates[j]),
-                                        DateUtil.parse(endDates[j]),
-                                        positions[j],
-                                        descriptions[j]
-                                ));
-                            }
-                        }
-                        sections.add(new CompanySection(name, urls[i], periods));
-                    }
-                }
-                r.getSections().remove(type);
-                for (Section section : sections) {
-                    r.setSection(type, section);
-                }
+            r.getSections().remove(type);
+            for (Section section : getSections(req, type)) {
+                r.setSection(type, section);
             }
         }
         if (isCreate) {
@@ -94,47 +54,6 @@ public class ResumeServlet extends HttpServlet {
             storage.update(r);
         }
         resp.sendRedirect("resume");
-    }
-
-    private void addSection(HttpServletRequest req, SectionType type, Map<String, Section> sections, String index, String sectionName, String url) {
-        String startDate = req.getParameter(type.name() + index + "startDate");
-        String endDate = req.getParameter(type.name() + index + "endDate");
-        String position = req.getParameter(type.name() + index + "position");
-        position = position == null ? "" : position;
-        String description = req.getParameter(type.name() + index + "description");
-        description = description == null ? "" : description;
-        if (!HtmlHelper.isEmpty(startDate) && !HtmlHelper.isEmpty(endDate)) {
-            Period period = new Period(DateUtil.parse(startDate), DateUtil.parse(endDate), position, description);
-            if (!sections.containsKey(sectionName)) {
-                List<Period> periods = new ArrayList<>();
-                periods.add(period);
-                Section section = new CompanySection(sectionName, url, periods);
-                sections.put(sectionName, section);
-            } else {
-                ((CompanySection) sections.get(sectionName)).getPeriods().add(period);
-            }
-        }
-    }
-
-    private Section getSection(SectionType type, String value) {
-        switch (type) {
-            case PERSONAL, OBJECTIVE -> {
-                return new TextSection(value);
-            }
-            case ACHIEVEMENT, QUALIFICATIONS -> {
-                String[] items = value.split("\n");
-                List<String> list = new ArrayList<>();
-                for (String item : items) {
-                    if (!item.trim().isEmpty()) {
-                        list.add(item.trim());
-                    }
-                }
-                return !list.isEmpty() ? new ListSection(list) : null;
-            }
-            default -> {
-                return null;
-            }
-        }
     }
 
     @Override
@@ -184,5 +103,59 @@ public class ResumeServlet extends HttpServlet {
         req.getRequestDispatcher(
                 "view".equals(action) ? "/WEB-INF/jsp/view.jsp" :
                         "/WEB-INF/jsp/edit.jsp").forward(req, resp);
+    }
+
+    private List<Section> getSections(HttpServletRequest req, SectionType type) {
+        List<Section> sections = new ArrayList<>();
+        String value = req.getParameter(type.name());
+        switch (type) {
+            case PERSONAL, OBJECTIVE -> {
+                if (!HtmlHelper.isEmpty(value)) {
+                    sections.add(new TextSection(value));
+                }
+            }
+            case ACHIEVEMENT, QUALIFICATIONS -> {
+                if (!HtmlHelper.isEmpty(value)) {
+                    String[] items = value.split("\n");
+                    List<String> list = new ArrayList<>();
+                    for (String item : items) {
+                        if (!item.trim().isEmpty()) {
+                            list.add(item.trim());
+                        }
+                    }
+                    if (!list.isEmpty()) {
+                        sections.add(new ListSection(list));
+                    }
+                }
+            }
+            case EXPERIENCE, EDUCATION -> {
+                String[] names = req.getParameterValues(type.name());
+                String[] urls = req.getParameterValues(type.name() + "url");
+                for (int i = 0; i < names.length; i++) {
+                    String name = names[i];
+                    if (!HtmlHelper.isEmpty(name)) {
+                        List<Period> periods = new ArrayList<>();
+                        String pfx = type.name() + i;
+                        String[] startDates = req.getParameterValues(pfx + "startDate");
+                        String[] endDates = req.getParameterValues(pfx + "endDate");
+                        String[] positions = req.getParameterValues(pfx + "position");
+                        String[] descriptions = req.getParameterValues(pfx + "description");
+
+                        for (int j = 0; j < positions.length; j++) {
+                            if (!HtmlHelper.isEmpty(positions[j])) {
+                                periods.add(new Period(
+                                        DateUtil.parse(startDates[j]),
+                                        DateUtil.parse(endDates[j]),
+                                        positions[j],
+                                        descriptions[j]
+                                ));
+                            }
+                        }
+                        sections.add(new CompanySection(name, urls[i], periods));
+                    }
+                }
+            }
+        }
+        return sections;
     }
 }
