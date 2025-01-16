@@ -53,9 +53,6 @@ public class TestData {
         periods3.add(new Period(DateUtil.of(2001, Month.MARCH), DateUtil.of(2005, Month.JANUARY), "student", "IT facultet"));
         R1.setSection(SectionType.EDUCATION,
                 new CompanySection("Institute", null, periods3));
-        /*R1.addSection(SectionType.EDUCATION,
-                new CompanySection("Organization12", "http://Organization12.ru", null));*/
-
 
         R2.setContact(ContactType.SKYPE, "skype2");
         R2.setContact(ContactType.PHONE, "22222");

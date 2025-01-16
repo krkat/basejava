@@ -36,14 +36,14 @@
             <c:choose>
                 <c:when test="${sectionType.equals(SectionType.OBJECTIVE)}">
                     <input type="text" name="${sectionType.name()}" size=75
-                           value="${resume.getSection(sectionType)}">
+                           value="${resume.sectionToString(sectionType)}">
                 </c:when>
                 <c:when test="${sectionType.equals(SectionType.PERSONAL)}">
-                    <textarea name="${sectionType.name()}" cols=75 rows=5>${resume.getSection(sectionType)}</textarea>
+                    <textarea name="${sectionType.name()}" cols=75 rows=5>${resume.sectionToString(sectionType)}</textarea>
                 </c:when>
                 <c:when test="${sectionType.equals(SectionType.ACHIEVEMENT) || sectionType.equals(SectionType.QUALIFICATIONS)}">
                     <textarea id="listSection" name="${sectionType.name()}" cols=75
-                              rows=5>${resume.getSection(sectionType)}</textarea>
+                              rows=5>${resume.sectionToString(sectionType)}</textarea>
                 </c:when>
                 <c:when test="${sectionType.equals(SectionType.EXPERIENCE) || sectionType.equals(SectionType.EDUCATION)}">
                     <c:forEach var="section" items="<%=resume.getSections().get(sectionType)%>" varStatus="counter">

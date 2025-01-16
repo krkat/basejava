@@ -82,7 +82,7 @@ public class Resume implements Comparable<Resume>, Serializable {
         contacts.put(type, contact);
     }
 
-    public String getSection(SectionType type) {
+    public String sectionToString(SectionType type) {
         List<Section> list = sections.get(type);
         StringBuilder builder = new StringBuilder();
         if (list != null) {
@@ -100,10 +100,6 @@ public class Resume implements Comparable<Resume>, Serializable {
                         }
                     }
                 }
-                case EXPERIENCE, EDUCATION -> {
-                    builder.append("");
-                }
-                default -> builder.append("");
             }
         }
         return builder.toString();
