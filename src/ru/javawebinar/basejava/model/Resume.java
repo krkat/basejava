@@ -78,6 +78,10 @@ public class Resume implements Comparable<Resume>, Serializable {
         return sections;
     }
 
+    public List<Section> getSections(SectionType type) {
+        return sections.get(type) != null ? sections.get(type) : Collections.emptyList();
+    }
+
     public void setContact(ContactType type, String contact) {
         contacts.put(type, contact);
     }

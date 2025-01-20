@@ -14,7 +14,12 @@ public enum ContactType {
     EMAIL("Почта") {
         @Override
         public String toHtml0(String value) {
-            return getTitle() + ": " + HtmlHelper.toLink("mailTo:" + value, value);
+            return getTitle() + ": " + toLink(value);
+        }
+
+        @Override
+        public String toLink(String value) {
+            return (value == null) ? "" : toLink("mailto:" + value, value);
         }
     },
     LINKEDIN("Профиль LinkedIn") {
@@ -61,6 +66,10 @@ public enum ContactType {
     }
 
     public String toLink(String href) {
-        return HtmlHelper.toLink(href, title);
+        return toLink(href, title);
+    }
+
+    public static String toLink(String href, String title) {
+        return "<a class=\"contact-link\" href='" + href + "'>" + title + "</a>";
     }
 }

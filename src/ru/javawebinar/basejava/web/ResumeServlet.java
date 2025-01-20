@@ -12,16 +12,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.http.HttpRequest;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ResumeServlet extends HttpServlet {
+    private enum THEME {
+        dark, light, purple
+    }
     private Storage storage;
+    private final Set<String> themes = new HashSet<>();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         storage = Config.get().getStorage();
+        for (THEME t : THEME.values()) {
+            themes.add(t.name());
+        }
     }
 
     @Override
@@ -53,13 +63,15 @@ public class ResumeServlet extends HttpServlet {
         } else {
             storage.update(r);
         }
-        resp.sendRedirect("resume");
+        resp.sendRedirect("resume?theme=" + getTheme(req));
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String uuid = req.getParameter("uuid");
         String action = req.getParameter("action");
+        req.setAttribute("theme", getTheme(req));
+
         if (action == null) {
             req.setAttribute("resumes", storage.getAllSorted());
             req.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(req, resp);
@@ -69,7 +81,7 @@ public class ResumeServlet extends HttpServlet {
         switch (action) {
             case "delete" -> {
                 storage.delete(uuid);
-                resp.sendRedirect("resume");
+                resp.sendRedirect("resume?theme=" + getTheme(req));
                 return;
             }
             case "view" -> r = storage.get(uuid);
@@ -103,6 +115,11 @@ public class ResumeServlet extends HttpServlet {
         req.getRequestDispatcher(
                 "view".equals(action) ? "/WEB-INF/jsp/view.jsp" :
                         "/WEB-INF/jsp/edit.jsp").forward(req, resp);
+    }
+
+    private String getTheme(HttpServletRequest request) {
+        String theme = request.getParameter("theme");
+        return themes.contains(theme) ? theme : THEME.light.name();
     }
 
     private List<Section> getSections(HttpServletRequest req, SectionType type) {
@@ -142,7 +159,7 @@ public class ResumeServlet extends HttpServlet {
                         String[] descriptions = req.getParameterValues(pfx + "description");
 
                         for (int j = 0; j < positions.length; j++) {
-                            if (!HtmlHelper.isEmpty(positions[j])) {
+                            if (!HtmlHelper.isEmpty(positions[j]) && !HtmlHelper.isEmpty(startDates[j])) {
                                 periods.add(new Period(
                                         DateUtil.parse(startDates[j]),
                                         DateUtil.parse(endDates[j]),
@@ -151,7 +168,9 @@ public class ResumeServlet extends HttpServlet {
                                 ));
                             }
                         }
-                        sections.add(new CompanySection(name, urls[i], periods));
+                        if (!periods.isEmpty()) {
+                            sections.add(new CompanySection(name, urls[i], periods));
+                        }
                     }
                 }
             }
