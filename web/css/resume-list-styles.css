@@ -91,18 +91,28 @@ table {
     border-bottom-right-radius: 10px;
 }
 
+.head-name-column, .name-column {
+    font-weight: bold;
+    width: 230px !important;
+    min-width: 150px !important;
+    padding: 0 0 0 38px;
+}
+
+
+.head-name-column {
+    text-align: center;
+}
+
 .name-column {
     text-align: start;
-    padding: 0 0 0 38px;
 }
 
 .info-column {
     text-align: start;
-    width: 230px !important;
-    min-width: 180px !important;
 }
 
 .img-column {
+    align-content: center;
     width: 110px !important;
     min-width: 110px !important;
 }

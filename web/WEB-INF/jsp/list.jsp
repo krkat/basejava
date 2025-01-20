@@ -19,6 +19,7 @@
                 <option value="light" ${theme == null || theme == 'light' ? 'selected' : ''}>Светлая</option>
                 <option value="dark" ${theme == 'dark' ? 'selected' : ''}>Темная</option>
                 <option value="purple" ${theme == 'purple' ? 'selected' : ''}>Фиолетовая</option>
+                <option value="dark_green" ${theme == 'dark_green' ? 'selected' : ''}>Темно-зеленая</option>
             </select>
         </form>
     </div>
@@ -37,10 +38,10 @@
         <div class="resumes-list">
             <table>
                 <tr class="t-header">
-                    <th class="name-column">Имя</th>
-                    <th class="name-column">Контакты</th>
-                    <th class="name-column">Редактировать</th>
-                    <th class="name-column">Удалить</th>
+                    <th class="head-name-column">Имя</th>
+                    <th class="head-name-column">Контакты</th>
+                    <th class="head-name-column">Редактировать</th>
+                    <th class="head-name-column">Удалить</th>
                 </tr>
                 <c:forEach items="${resumes}" var="resume">
                     <jsp:useBean id="resume" type="ru.javawebinar.basejava.model.Resume"/>
